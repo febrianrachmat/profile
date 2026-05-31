@@ -1,10 +1,14 @@
 import { ImageResponse } from "next/og";
-import { profile } from "@/lib/content";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 export const size = { width: 64, height: 64 };
 export const contentType = "image/png";
 
 export default function Icon() {
+  const logo = readFileSync(join(process.cwd(), "public", "logo-rf.png"));
+  const src = `data:image/png;base64,${logo.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -14,15 +18,11 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#0a192f",
-          color: "#64ffda",
-          fontSize: 30,
-          fontWeight: 700,
-          borderRadius: 14,
-          border: "3px solid #64ffda",
+          background: "transparent",
         }}
       >
-        {profile.initials}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} width={62} height={41} style={{ objectFit: "contain" }} alt="" />
       </div>
     ),
     { ...size }

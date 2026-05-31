@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { profile } from "@/lib/content";
 import { useI18n } from "@/lib/i18n";
@@ -51,6 +52,14 @@ export default function Sidebar() {
         transition={{ duration: 0.6, delay: 0.1 }}
       >
         <div>
+          <Image
+            src="/logo-rf.png"
+            alt={`${profile.name} logo`}
+            width={1024}
+            height={682}
+            priority
+            className="mb-6 h-35 w-auto drop-shadow-lg sm:h-40"
+          />
           <h1 className="text-gradient inline-block pb-1 text-4xl font-bold tracking-tight sm:text-5xl">
             {profile.name}
           </h1>

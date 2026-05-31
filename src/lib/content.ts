@@ -15,7 +15,7 @@ export type SkillGroup = {
 
 export const profile = {
   // Ganti dengan datamu sendiri / Replace with your own data
-  name: "Febrian Rachmat",
+  name: "Rachmat Febrian",
   initials: "FR",
   role: {
     id: "Full Stack Software Engineer",

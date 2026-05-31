@@ -1,4 +1,6 @@
 import { ImageResponse } from "next/og";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { profile } from "@/lib/content";
 
 export const size = { width: 1200, height: 630 };
@@ -6,6 +8,9 @@ export const contentType = "image/png";
 export const alt = `${profile.name} · ${profile.role.en}`;
 
 export default function OpengraphImage() {
+  const logo = readFileSync(join(process.cwd(), "public", "logo-rf.png"));
+  const logoSrc = `data:image/png;base64,${logo.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -22,23 +27,14 @@ export default function OpengraphImage() {
           fontFamily: "sans-serif",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: 96,
-            height: 96,
-            borderRadius: 20,
-            border: "4px solid #64ffda",
-            color: "#64ffda",
-            fontSize: 44,
-            fontWeight: 700,
-            marginBottom: 40,
-          }}
-        >
-          {profile.initials}
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={logoSrc}
+          width={240}
+          height={160}
+          style={{ objectFit: "contain", marginBottom: 36 }}
+          alt=""
+        />
         <div style={{ fontSize: 72, fontWeight: 700, lineHeight: 1.1 }}>
           {profile.name}
         </div>

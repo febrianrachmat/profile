@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { profile } from "@/lib/content";
 
@@ -49,9 +50,15 @@ export default function Loader() {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="flex h-20 w-20 items-center justify-center rounded-lg border-2 border-accent text-2xl font-bold text-accent"
           >
-            {profile.initials}
+            <Image
+              src="/logo-rf.png"
+              alt={`${profile.name} logo`}
+              width={1024}
+              height={682}
+              priority
+              className="h-40 w-auto drop-shadow-2xl sm:h-45"
+            />
           </motion.div>
           <div className="mt-8 h-px w-48 overflow-hidden bg-navy-lighter">
             <motion.div

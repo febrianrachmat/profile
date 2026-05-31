@@ -33,7 +33,7 @@ export default function Home() {
           <Projects />
           <Skills />
           <Contact />
-          <footer className="pb-12 pt-4 text-center font-mono text-xs text-slate lg:text-left">
+          <footer className="pb-12 pt-4 text-center font-mono text-xs text-slate">
             <p>
               © {new Date().getFullYear()} {profile.name}.
             </p>
