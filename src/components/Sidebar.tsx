@@ -113,11 +113,13 @@ export default function Sidebar() {
             <LinkedInIcon className="h-6 w-6" />
           </Boop>
         </a>
-        <a href={profile.socials.twitter} target="_blank" rel="noreferrer" aria-label="Twitter / X" className="text-slate transition-colors hover:text-accent">
-          <Boop rotation={-12} scale={1.25}>
-            <TwitterIcon className="h-5 w-5" />
-          </Boop>
-        </a>
+        {profile.socials.twitter && (
+          <a href={profile.socials.twitter} target="_blank" rel="noreferrer" aria-label="Twitter / X" className="text-slate transition-colors hover:text-accent">
+            <Boop rotation={-12} scale={1.25}>
+              <TwitterIcon className="h-5 w-5" />
+            </Boop>
+          </a>
+        )}
         <a href={profile.socials.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" className="text-slate transition-colors hover:text-accent">
           <Boop rotation={-12} scale={1.25}>
             <InstagramIcon className="h-6 w-6" />

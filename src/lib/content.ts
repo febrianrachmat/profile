@@ -25,7 +25,8 @@ export const profile = {
     id: "Aku membangun pengalaman web yang cepat, mudah diakses, dan rapi dari sisi front-end hingga back-end.",
     en: "I build fast, accessible, and well-crafted web experiences from front-end to back-end.",
   } as Record<Lang, string>,
-  email: "febrian@example.com",
+  email: "febrian.rachmat11@gmail.com",
+  whatsapp: "6282231344399",
   location: {
     id: "Indonesia",
     en: "Indonesia",
@@ -33,9 +34,9 @@ export const profile = {
   resumeUrl: "#",
   socials: {
     github: "https://github.com/febrianrachmat",
-    linkedin: "https://linkedin.com/in/febrianrachmat",
-    twitter: "https://twitter.com/",
-    instagram: "https://instagram.com/",
+    linkedin: "https://www.linkedin.com/in/rachmatfebrian/",
+    twitter: "",
+    instagram: "https://www.instagram.com/rachmatfebrian/",
   },
 };
 

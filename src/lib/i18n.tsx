@@ -27,7 +27,8 @@ export const ui: Dict = {
     id: "Aku selalu terbuka untuk berdiskusi tentang peluang baru, kolaborasi, atau sekadar menyapa. Jangan ragu untuk menghubungi!",
     en: "I'm always open to discussing new opportunities, collaborations, or just to say hi. Feel free to reach out!",
   },
-  contactButton: { id: "Kirim Email", en: "Say Hello" },
+  contactWhatsapp: { id: "Hello !", en: "Hello !" },
+  contactOrEmail: { id: "atau kirim email ke", en: "or email me at" },
   viewProject: { id: "Lihat projek", en: "View project" },
   viewCode: { id: "Lihat kode", en: "View code" },
 };
