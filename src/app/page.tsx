@@ -8,12 +8,9 @@ import About from "@/components/sections/About";
 import Projects from "@/components/sections/Projects";
 import Skills from "@/components/sections/Skills";
 import Contact from "@/components/sections/Contact";
-import { useI18n } from "@/lib/i18n";
 import { profile } from "@/lib/content";
 
 export default function Home() {
-  const { t } = useI18n();
-
   return (
     <>
       <Loader />
@@ -28,7 +25,7 @@ export default function Home() {
           <Contact />
           <footer className="pb-12 pt-4 text-center font-mono text-xs text-slate lg:text-left">
             <p>
-              © {new Date().getFullYear()} {profile.name}. {t("builtWith")}
+              © {new Date().getFullYear()} {profile.name}.
             </p>
           </footer>
         </div>
