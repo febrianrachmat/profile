@@ -30,10 +30,6 @@ export const ui: Dict = {
   contactButton: { id: "Kirim Email", en: "Say Hello" },
   viewProject: { id: "Lihat projek", en: "View project" },
   viewCode: { id: "Lihat kode", en: "View code" },
-  builtWith: {
-    id: "Dibuat dengan Next.js & Tailwind CSS, di-deploy di Vercel.",
-    en: "Built with Next.js & Tailwind CSS, deployed on Vercel.",
-  },
 };
 
 type I18nContextType = {

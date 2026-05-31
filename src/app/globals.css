@@ -23,9 +23,6 @@
   --card-shadow-hover: 0 0 #0000;
   --card-blur: none;
   --bg-gradient: none;
-
-  --font-inter: "Inter", system-ui, -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
 }
 
 [data-theme="light"] {

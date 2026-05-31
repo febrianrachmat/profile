@@ -60,6 +60,16 @@ export default function Sidebar() {
           <p className="mt-4 max-w-xs leading-relaxed text-slate">
             {profile.tagline[lang]}
           </p>
+          {profile.resumeUrl && profile.resumeUrl !== "#" && (
+            <a
+              href={profile.resumeUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-6 inline-flex items-center gap-2 rounded-md border border-accent px-5 py-2.5 font-mono text-sm font-semibold text-accent transition-colors hover:bg-accent/10"
+            >
+              {t("resume")}
+            </a>
+          )}
         </div>
 
         {/* Desktop nav */}
@@ -118,6 +128,7 @@ export default function Sidebar() {
           onClick={toggleTheme}
           className="ml-auto flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-navy-lighter text-slate-light transition-colors hover:border-accent hover:text-accent"
           aria-label="Toggle theme"
+          aria-pressed={theme === "light"}
           title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
         >
           <AnimatePresence mode="wait" initial={false}>
@@ -141,7 +152,7 @@ export default function Sidebar() {
         <button
           onClick={toggle}
           className="flex items-center gap-1 rounded-full border border-navy-lighter px-3 py-1.5 font-mono text-xs font-semibold text-slate-light transition-colors hover:border-accent hover:text-accent"
-          aria-label="Toggle language"
+          aria-label={`Switch language, current ${lang === "en" ? "English" : "Indonesian"}`}
         >
           <span className={lang === "en" ? "text-accent" : ""}>EN</span>
           <span className="text-slate">/</span>

@@ -36,7 +36,7 @@ export default function Projects() {
                       <GitHubIcon className="h-5 w-5" />
                     </a>
                   )}
-                  {project.link && (
+                  {project.link && project.link !== "#" && (
                     <a
                       href={project.link}
                       target="_blank"

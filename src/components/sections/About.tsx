@@ -39,15 +39,19 @@ export default function About() {
                     <h4 className="font-semibold text-slate-lighter">
                       {exp.role[lang]}
                       <span className="text-accent"> · </span>
-                      <a
-                        href={exp.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1 hover:text-accent"
-                      >
-                        {exp.company}
-                        <ExternalLinkIcon className="h-3.5 w-3.5" />
-                      </a>
+                      {exp.url && exp.url !== "#" ? (
+                        <a
+                          href={exp.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 hover:text-accent"
+                        >
+                          {exp.company}
+                          <ExternalLinkIcon className="h-3.5 w-3.5" />
+                        </a>
+                      ) : (
+                        <span>{exp.company}</span>
+                      )}
                     </h4>
                     <p className="mt-2 text-sm leading-relaxed text-slate">
                       {exp.description[lang]}
