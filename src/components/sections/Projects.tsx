@@ -13,9 +13,7 @@ export default function Projects() {
   return (
     <section id="projects" className="scroll-mt-24 py-12 lg:py-24" aria-label="Projects">
       <Reveal>
-        <h3 className="section-heading mb-8">
-          <span className="mono text-lg">03.</span> {t("projectsTitle")}
-        </h3>
+        <h3 className="section-heading mb-8">{t("projectsTitle")}</h3>
       </Reveal>
       <div className="grid gap-5 sm:grid-cols-2">
         {projects.map((project, i) => (

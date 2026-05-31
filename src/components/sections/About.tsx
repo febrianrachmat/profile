@@ -12,9 +12,7 @@ export default function About() {
     <>
       <section id="about" className="scroll-mt-24 py-12 lg:py-24" aria-label="About me">
         <Reveal>
-          <h3 className="section-heading mb-8">
-            <span className="mono text-lg">01.</span> {t("aboutTitle")}
-          </h3>
+          <h3 className="section-heading mb-8">{t("aboutTitle")}</h3>
         </Reveal>
         <div className="space-y-4 text-base leading-relaxed text-slate">
           {about[lang].map((p, i) => (
@@ -27,9 +25,7 @@ export default function About() {
 
       <section id="experience" className="scroll-mt-24 py-12 lg:py-16" aria-label="Experience">
         <Reveal>
-          <h3 className="section-heading mb-8">
-            <span className="mono text-lg">02.</span> {t("experienceTitle")}
-          </h3>
+          <h3 className="section-heading mb-8">{t("experienceTitle")}</h3>
         </Reveal>
         <ol className="space-y-3">
           {experiences.map((exp, i) => (

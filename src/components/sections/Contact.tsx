@@ -16,7 +16,6 @@ export default function Contact() {
       aria-label="Contact"
     >
       <Reveal>
-        <p className="mb-3 font-mono text-sm text-accent">05.</p>
         <h3 className="text-3xl font-bold text-slate-lighter sm:text-4xl">
           {t("contactTitle")}
         </h3>

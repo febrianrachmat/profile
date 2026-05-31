@@ -10,9 +10,7 @@ export default function Skills() {
   return (
     <section id="skills" className="scroll-mt-24 py-12 lg:py-24" aria-label="Skills">
       <Reveal>
-        <h3 className="section-heading mb-8">
-          <span className="mono text-lg">04.</span> {t("skillsTitle")}
-        </h3>
+        <h3 className="section-heading mb-8">{t("skillsTitle")}</h3>
       </Reveal>
       <div className="grid gap-5 sm:grid-cols-2">
         {skills.map((group, i) => (
