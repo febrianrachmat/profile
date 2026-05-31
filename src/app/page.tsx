@@ -2,6 +2,7 @@
 
 import Loader from "@/components/Loader";
 import Spotlight from "@/components/Spotlight";
+import ScrollProgress from "@/components/ScrollProgress";
 import Sidebar from "@/components/Sidebar";
 import About from "@/components/sections/About";
 import Projects from "@/components/sections/Projects";
@@ -16,6 +17,7 @@ export default function Home() {
   return (
     <>
       <Loader />
+      <ScrollProgress />
       <Spotlight />
       <main className="relative z-10 mx-auto min-h-screen max-w-6xl px-6 sm:px-10 lg:flex lg:gap-12 lg:px-16">
         <Sidebar />

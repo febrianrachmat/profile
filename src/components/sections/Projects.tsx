@@ -3,6 +3,8 @@
 import { projects } from "@/lib/content";
 import { useI18n } from "@/lib/i18n";
 import Reveal from "../Reveal";
+import Tilt from "../Tilt";
+import Boop from "../Boop";
 import { ExternalLinkIcon, FolderIcon, GitHubIcon } from "../Icons";
 
 export default function Projects() {
@@ -17,10 +19,13 @@ export default function Projects() {
       </Reveal>
       <div className="grid gap-5 sm:grid-cols-2">
         {projects.map((project, i) => (
-          <Reveal key={project.title} delay={i * 0.05}>
+          <Reveal key={project.title} delay={i * 0.05} className="h-full">
+            <Tilt className="h-full">
             <article className="card card-interactive group flex h-full flex-col rounded-xl p-6 hover:-translate-y-1">
               <div className="mb-4 flex items-center justify-between">
-                <FolderIcon className="h-9 w-9 text-accent" />
+                <Boop rotation={-10} scale={1.15} y={-2}>
+                  <FolderIcon className="h-9 w-9 text-accent" />
+                </Boop>
                 <div className="flex items-center gap-3 text-slate-light">
                   {project.repo && (
                     <a
@@ -58,6 +63,7 @@ export default function Projects() {
                 ))}
               </ul>
             </article>
+            </Tilt>
           </Reveal>
         ))}
       </div>

@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { profile } from "@/lib/content";
 import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
+import Boop from "./Boop";
 import {
   GitHubIcon,
   InstagramIcon,
@@ -50,7 +51,7 @@ export default function Sidebar() {
         transition={{ duration: 0.6, delay: 0.1 }}
       >
         <div>
-          <h1 className="text-4xl font-bold tracking-tight text-slate-lighter sm:text-5xl">
+          <h1 className="text-gradient inline-block pb-1 text-4xl font-bold tracking-tight sm:text-5xl">
             {profile.name}
           </h1>
           <h2 className="mt-3 text-lg font-medium text-slate-lighter sm:text-xl">
@@ -93,29 +94,48 @@ export default function Sidebar() {
         transition={{ duration: 0.6, delay: 0.3 }}
       >
         <a href={profile.socials.github} target="_blank" rel="noreferrer" aria-label="GitHub" className="text-slate transition-colors hover:text-accent">
-          <GitHubIcon className="h-6 w-6" />
+          <Boop rotation={-12} scale={1.25}>
+            <GitHubIcon className="h-6 w-6" />
+          </Boop>
         </a>
         <a href={profile.socials.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-slate transition-colors hover:text-accent">
-          <LinkedInIcon className="h-6 w-6" />
+          <Boop rotation={-12} scale={1.25}>
+            <LinkedInIcon className="h-6 w-6" />
+          </Boop>
         </a>
         <a href={profile.socials.twitter} target="_blank" rel="noreferrer" aria-label="Twitter / X" className="text-slate transition-colors hover:text-accent">
-          <TwitterIcon className="h-5 w-5" />
+          <Boop rotation={-12} scale={1.25}>
+            <TwitterIcon className="h-5 w-5" />
+          </Boop>
         </a>
         <a href={profile.socials.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" className="text-slate transition-colors hover:text-accent">
-          <InstagramIcon className="h-6 w-6" />
+          <Boop rotation={-12} scale={1.25}>
+            <InstagramIcon className="h-6 w-6" />
+          </Boop>
         </a>
 
         <button
           onClick={toggleTheme}
-          className="ml-auto flex h-9 w-9 items-center justify-center rounded-full border border-navy-lighter text-slate-light transition-colors hover:border-accent hover:text-accent"
+          className="ml-auto flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-navy-lighter text-slate-light transition-colors hover:border-accent hover:text-accent"
           aria-label="Toggle theme"
           title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
         >
-          {theme === "dark" ? (
-            <SunIcon className="h-4 w-4" />
-          ) : (
-            <MoonIcon className="h-4 w-4" />
-          )}
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={theme}
+              initial={{ rotate: -90, scale: 0, opacity: 0 }}
+              animate={{ rotate: 0, scale: 1, opacity: 1 }}
+              exit={{ rotate: 90, scale: 0, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="flex items-center justify-center"
+            >
+              {theme === "dark" ? (
+                <SunIcon className="h-4 w-4" />
+              ) : (
+                <MoonIcon className="h-4 w-4" />
+              )}
+            </motion.span>
+          </AnimatePresence>
         </button>
 
         <button
