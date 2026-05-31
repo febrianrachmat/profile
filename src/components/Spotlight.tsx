@@ -24,7 +24,7 @@ export default function Spotlight() {
     <div
       className="spotlight"
       style={{
-        background: `radial-gradient(600px circle at ${pos.x}px ${pos.y}px, rgba(100, 255, 218, 0.06), transparent 40%)`,
+        background: `radial-gradient(600px circle at ${pos.x}px ${pos.y}px, rgb(var(--spotlight) / 0.06), transparent 40%)`,
       }}
       aria-hidden
     />

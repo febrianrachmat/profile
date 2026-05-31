@@ -18,7 +18,7 @@ export default function Projects() {
       <div className="grid gap-5 sm:grid-cols-2">
         {projects.map((project, i) => (
           <Reveal key={project.title} delay={i * 0.05}>
-            <article className="group flex h-full flex-col rounded-xl border border-navy-lighter/60 bg-navy-light/30 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:bg-navy-light/60">
+            <article className="card card-interactive group flex h-full flex-col rounded-xl p-6 hover:-translate-y-1">
               <div className="mb-4 flex items-center justify-between">
                 <FolderIcon className="h-9 w-9 text-accent" />
                 <div className="flex items-center gap-3 text-slate-light">

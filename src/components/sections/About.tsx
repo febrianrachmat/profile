@@ -34,7 +34,7 @@ export default function About() {
         <ol className="space-y-3">
           {experiences.map((exp, i) => (
             <Reveal key={i} delay={i * 0.05}>
-              <li className="group relative rounded-lg p-4 transition-all hover:bg-navy-light/40 sm:p-6">
+              <li className="row-hover group relative rounded-lg p-4 sm:p-6">
                 <div className="grid gap-2 sm:grid-cols-[140px_1fr] sm:gap-6">
                   <p className="pt-1 font-mono text-xs uppercase tracking-wide text-slate">
                     {exp.period[lang]}

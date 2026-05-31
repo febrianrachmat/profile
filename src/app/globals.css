@@ -2,10 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --bg: #0a192f;
+:root,
+[data-theme="dark"] {
+  --color-navy: 10 25 47;
+  --color-navy-light: 17 34 64;
+  --color-navy-lighter: 35 53 84;
+  --color-slate: 136 146 176;
+  --color-slate-light: 168 178 209;
+  --color-slate-lighter: 204 214 246;
+  --color-accent: 100 255 218;
+  --color-accent-dark: 15 155 142;
+  --spotlight: 100 255 218;
+  --scrollbar-hover: 45 66 99;
+
+  /* Surfaces (translucent over the navy backdrop in dark mode) */
+  --surface: rgb(17 34 64 / 0.3);
+  --surface-hover: rgb(17 34 64 / 0.6);
+  --surface-border: rgb(35 53 84 / 0.6);
+  --card-shadow: 0 0 #0000;
+  --card-shadow-hover: 0 0 #0000;
+  --card-blur: none;
+  --bg-gradient: none;
+
   --font-inter: "Inter", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+}
+
+[data-theme="light"] {
+  /* Icy Blue: bright, cold cyan-tinted backdrop with crisp glassy cards */
+  --color-navy: 233 244 250;
+  --color-navy-light: 255 255 255;
+  --color-navy-lighter: 195 224 238;
+  --color-slate: 60 85 102;
+  --color-slate-light: 40 62 79;
+  --color-slate-lighter: 11 44 68;
+  --color-accent: 8 145 178;
+  --color-accent-dark: 14 116 144;
+  --spotlight: 34 211 238;
+  --scrollbar-hover: 163 199 216;
+
+  /* Crisp icy cards: mostly opaque white + light frost over a cool gradient */
+  --surface: rgb(255 255 255 / 0.85);
+  --surface-hover: rgb(255 255 255 / 0.95);
+  --surface-border: rgb(195 224 238 / 0.9);
+  --card-shadow: 0 4px 22px -10px rgb(11 44 68 / 0.16);
+  --card-shadow-hover: 0 18px 36px -12px rgb(11 44 68 / 0.24);
+  --card-blur: blur(6px) saturate(130%);
+  --bg-gradient: radial-gradient(
+      1200px circle at 0% 0%,
+      rgb(6 182 212 / 0.1),
+      transparent 42%
+    ),
+    radial-gradient(1000px circle at 100% 0%, rgb(34 211 238 / 0.09), transparent 38%),
+    radial-gradient(900px circle at 100% 100%, rgb(56 189 248 / 0.07), transparent 40%);
 }
 
 html {
@@ -13,10 +62,13 @@ html {
 }
 
 body {
-  background-color: var(--bg);
-  color: #8892b0;
+  background-color: rgb(var(--color-navy));
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
+  color: rgb(var(--color-slate));
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Custom scrollbar */
@@ -24,22 +76,43 @@ body {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a192f;
+  background: rgb(var(--color-navy));
 }
 ::-webkit-scrollbar-thumb {
-  background: #233554;
+  background: rgb(var(--color-navy-lighter));
   border-radius: 6px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2d4263;
+  background: rgb(var(--scrollbar-hover));
 }
 
 ::selection {
-  background: rgba(100, 255, 218, 0.25);
-  color: #ccd6f6;
+  background: rgb(var(--color-accent) / 0.25);
+  color: rgb(var(--color-slate-lighter));
 }
 
 @layer components {
+  .card {
+    background-color: var(--surface);
+    border: 1px solid var(--surface-border);
+    box-shadow: var(--card-shadow);
+    backdrop-filter: var(--card-blur);
+    -webkit-backdrop-filter: var(--card-blur);
+    transition: background-color 0.3s ease, border-color 0.2s ease,
+      box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .card-interactive:hover {
+    background-color: var(--surface-hover);
+    border-color: rgb(var(--color-accent) / 0.4);
+    box-shadow: var(--card-shadow-hover);
+  }
+  .row-hover {
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .row-hover:hover {
+    background-color: var(--surface-hover);
+    box-shadow: var(--card-shadow);
+  }
   .section-heading {
     @apply flex items-center gap-4 text-2xl font-bold text-slate-lighter sm:text-3xl;
   }

@@ -10,18 +10,18 @@ const config: Config = {
     extend: {
       colors: {
         navy: {
-          DEFAULT: "#0a192f",
-          light: "#112240",
-          lighter: "#233554",
+          DEFAULT: "rgb(var(--color-navy) / <alpha-value>)",
+          light: "rgb(var(--color-navy-light) / <alpha-value>)",
+          lighter: "rgb(var(--color-navy-lighter) / <alpha-value>)",
         },
         slate: {
-          DEFAULT: "#8892b0",
-          light: "#a8b2d1",
-          lighter: "#ccd6f6",
+          DEFAULT: "rgb(var(--color-slate) / <alpha-value>)",
+          light: "rgb(var(--color-slate-light) / <alpha-value>)",
+          lighter: "rgb(var(--color-slate-lighter) / <alpha-value>)",
         },
         accent: {
-          DEFAULT: "#64ffda",
-          dark: "#0f9b8e",
+          DEFAULT: "rgb(var(--color-accent) / <alpha-value>)",
+          dark: "rgb(var(--color-accent-dark) / <alpha-value>)",
         },
       },
       fontFamily: {

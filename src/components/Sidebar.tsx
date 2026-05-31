@@ -4,10 +4,13 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { profile } from "@/lib/content";
 import { useI18n } from "@/lib/i18n";
+import { useTheme } from "@/lib/theme";
 import {
   GitHubIcon,
   InstagramIcon,
   LinkedInIcon,
+  MoonIcon,
+  SunIcon,
   TwitterIcon,
 } from "./Icons";
 
@@ -20,6 +23,7 @@ const navItems = [
 
 export default function Sidebar() {
   const { t, lang, toggle } = useI18n();
+  const { theme, toggle: toggleTheme } = useTheme();
   const [active, setActive] = useState("about");
 
   useEffect(() => {
@@ -102,8 +106,21 @@ export default function Sidebar() {
         </a>
 
         <button
+          onClick={toggleTheme}
+          className="ml-auto flex h-9 w-9 items-center justify-center rounded-full border border-navy-lighter text-slate-light transition-colors hover:border-accent hover:text-accent"
+          aria-label="Toggle theme"
+          title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {theme === "dark" ? (
+            <SunIcon className="h-4 w-4" />
+          ) : (
+            <MoonIcon className="h-4 w-4" />
+          )}
+        </button>
+
+        <button
           onClick={toggle}
-          className="ml-auto flex items-center gap-1 rounded-full border border-navy-lighter px-3 py-1.5 font-mono text-xs font-semibold text-slate-light transition-colors hover:border-accent hover:text-accent"
+          className="flex items-center gap-1 rounded-full border border-navy-lighter px-3 py-1.5 font-mono text-xs font-semibold text-slate-light transition-colors hover:border-accent hover:text-accent"
           aria-label="Toggle language"
         >
           <span className={lang === "en" ? "text-accent" : ""}>EN</span>
