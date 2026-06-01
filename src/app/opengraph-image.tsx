@@ -5,7 +5,7 @@ import { profile } from "@/lib/content";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = `${profile.name} · ${profile.role.en}`;
+export const alt = `${profile.name} · ${profile.role}`;
 
 export default function OpengraphImage() {
   const logo = readFileSync(join(process.cwd(), "public", "logo-rf.png"));
@@ -39,7 +39,7 @@ export default function OpengraphImage() {
           {profile.name}
         </div>
         <div style={{ fontSize: 36, color: "#64ffda", marginTop: 12 }}>
-          {profile.role.en}
+          {profile.role}
         </div>
         <div
           style={{
@@ -49,7 +49,7 @@ export default function OpengraphImage() {
             maxWidth: 900,
           }}
         >
-          {profile.tagline.en}
+          {profile.tagline}
         </div>
       </div>
     ),

@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { profile } from "@/lib/content";
-import { useI18n } from "@/lib/i18n";
+import { navItems, profile } from "@/lib/content";
 import { useTheme } from "@/lib/theme";
 import Boop from "./Boop";
 import {
@@ -16,15 +15,7 @@ import {
   TwitterIcon,
 } from "./Icons";
 
-const navItems = [
-  { id: "about", key: "navAbout" as const },
-  { id: "projects", key: "navProjects" as const },
-  { id: "skills", key: "navSkills" as const },
-  { id: "contact", key: "navContact" as const },
-];
-
 export default function Sidebar() {
-  const { t, lang, toggle } = useI18n();
   const { theme, toggle: toggleTheme } = useTheme();
   const [active, setActive] = useState("about");
 
@@ -64,10 +55,10 @@ export default function Sidebar() {
             {profile.name}
           </h1>
           <h2 className="mt-3 text-lg font-medium text-slate-lighter sm:text-xl">
-            {profile.role[lang]}
+            {profile.role}
           </h2>
           <p className="mt-4 max-w-xs leading-relaxed text-slate">
-            {profile.tagline[lang]}
+            {profile.tagline}
           </p>
           {profile.resumeUrl && profile.resumeUrl !== "#" && (
             <a
@@ -76,12 +67,11 @@ export default function Sidebar() {
               rel="noreferrer"
               className="mt-6 inline-flex items-center gap-2 rounded-md border border-accent px-5 py-2.5 font-mono text-sm font-semibold text-accent transition-colors hover:bg-accent/10"
             >
-              {t("resume")}
+              Resume
             </a>
           )}
         </div>
 
-        {/* Desktop nav */}
         <nav className="mt-16 hidden lg:block" aria-label="In-page jump links">
           <ul className="space-y-4">
             {navItems.map((item) => (
@@ -97,7 +87,7 @@ export default function Sidebar() {
                       active === item.id ? "text-slate-lighter" : "text-slate"
                     }`}
                   >
-                    {t(item.key)}
+                    {item.label}
                   </span>
                 </a>
               </li>
@@ -158,16 +148,6 @@ export default function Sidebar() {
               )}
             </motion.span>
           </AnimatePresence>
-        </button>
-
-        <button
-          onClick={toggle}
-          className="flex items-center gap-1 rounded-full border border-navy-lighter px-3 py-1.5 font-mono text-xs font-semibold text-slate-light transition-colors hover:border-accent hover:text-accent"
-          aria-label={`Switch language, current ${lang === "en" ? "English" : "Indonesian"}`}
-        >
-          <span className={lang === "en" ? "text-accent" : ""}>EN</span>
-          <span className="text-slate">/</span>
-          <span className={lang === "id" ? "text-accent" : ""}>ID</span>
         </button>
       </motion.div>
     </header>

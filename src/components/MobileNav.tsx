@@ -1,17 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useI18n } from "@/lib/i18n";
-
-const navItems = [
-  { id: "about", key: "navAbout" as const },
-  { id: "projects", key: "navProjects" as const },
-  { id: "skills", key: "navSkills" as const },
-  { id: "contact", key: "navContact" as const },
-];
+import { navItems } from "@/lib/content";
 
 export default function MobileNav() {
-  const { t } = useI18n();
   const [active, setActive] = useState("about");
 
   useEffect(() => {
@@ -47,7 +39,7 @@ export default function MobileNav() {
                   : "text-slate hover:text-slate-lighter"
               }`}
             >
-              {t(item.key)}
+              {item.label}
             </a>
           </li>
         ))}

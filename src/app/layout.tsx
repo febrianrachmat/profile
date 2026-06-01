@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { I18nProvider } from "@/lib/i18n";
 import { ThemeProvider } from "@/lib/theme";
 import { profile } from "@/lib/content";
 
@@ -24,8 +23,8 @@ const siteUrl =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: `${profile.name} · ${profile.role.en}`,
-  description: profile.tagline.en,
+  title: `${profile.name} · ${profile.role}`,
+  description: profile.tagline,
   keywords: [
     "Full Stack Developer",
     "Software Engineer",
@@ -39,20 +38,20 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   robots: { index: true, follow: true },
   openGraph: {
-    title: `${profile.name} · ${profile.role.en}`,
-    description: profile.tagline.en,
+    title: `${profile.name} · ${profile.role}`,
+    description: profile.tagline,
     url: "/",
     siteName: profile.name,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${profile.name} · ${profile.role.en}`,
-    description: profile.tagline.en,
+    title: `${profile.name} · ${profile.role}`,
+    description: profile.tagline,
   },
 };
 
-const initScript = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.dataset.theme=t;var l=localStorage.getItem('lang');if(l!=='id'&&l!=='en'){l=navigator.language&&navigator.language.indexOf('id')===0?'id':'en';}document.documentElement.lang=l;}catch(e){document.documentElement.dataset.theme='dark';}})();`;
+const initScript = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme='dark';}})();`;
 
 export default function RootLayout({
   children,
@@ -68,9 +67,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: initScript }} />
       </head>
       <body className="font-sans">
-        <ThemeProvider>
-          <I18nProvider>{children}</I18nProvider>
-        </ThemeProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
