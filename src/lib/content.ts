@@ -1,10 +1,30 @@
+export type ProjectCategory = "fullstack" | "frontend" | "backend";
+
+export type ProjectRepo = {
+  label: string;
+  url: string;
+};
+
 export type Project = {
   title: string;
   description: string;
   tech: string[];
+  category: ProjectCategory;
+  image: string;
   link?: string;
   repo?: string;
+  repos?: ProjectRepo[];
+  apiLink?: string;
 };
+
+export const projectCategories: {
+  id: ProjectCategory;
+  label: string;
+}[] = [
+  { id: "fullstack", label: "Full Stack" },
+  { id: "frontend", label: "Frontend" },
+  { id: "backend", label: "Backend" },
+];
 
 export type SkillGroup = {
   category: string;
@@ -44,36 +64,54 @@ export const about = [
 
 export const projects: Project[] = [
   {
-    title: "E-Commerce Platform",
+    title: "Kinova",
     description:
-      "Full stack e-commerce platform with shopping cart, payments, and admin dashboard.",
-    tech: ["Next.js", "TypeScript", "Stripe", "Prisma"],
-    link: "#",
-    repo: "https://github.com/febrianrachmat",
+      "Physiotherapy booking and consultation platform with patient, physiotherapist, and admin roles — booking, live chat (SSE), payments, OAuth, and admin analytics.",
+    tech: ["Next.js", "NestJS", "Prisma", "PostgreSQL", "JWT", "SSE"],
+    category: "fullstack",
+    image: "/projects/kinova.png",
+    link: "https://kinova-zeta.vercel.app/",
+    repos: [
+      {
+        label: "Frontend",
+        url: "https://github.com/Revou-FSSE-Oct25/crack-fe-febrianrachmat",
+      },
+      {
+        label: "Backend",
+        url: "https://github.com/Revou-FSSE-Oct25/crack-be-febrianrachmat",
+      },
+    ],
+    apiLink: "https://crack-be-febrianrachmat-production.up.railway.app/docs",
   },
   {
-    title: "Task Management App",
+    title: "VELDT",
     description:
-      "Collaborative task management app with real-time updates and kanban boards.",
-    tech: ["React", "Node.js", "Socket.io", "MongoDB"],
-    link: "#",
-    repo: "https://github.com/febrianrachmat",
+      "Premium fashion e-commerce with editorial homepage, bento shop grid, cart and checkout flow, bilingual UI (EN/ID), and admin demo.",
+    tech: ["Next.js", "TypeScript", "TanStack Query", "Zustand", "Tailwind CSS"],
+    category: "frontend",
+    image: "/projects/veldt.png",
+    link: "https://e-commerce-eight-vert-tzera30n9h.vercel.app/en",
+    repo: "https://github.com/febrianrachmat/e-commerce",
   },
   {
-    title: "Personal Finance Tracker",
+    title: "VELMONT",
     description:
-      "Personal finance tracker with data visualization and automatic spending categories.",
-    tech: ["Vue.js", "Express", "Chart.js", "PostgreSQL"],
-    link: "#",
-    repo: "https://github.com/febrianrachmat",
+      "Luxury hotel booking showcase with availability calendar, multi-step booking flow, gallery lightbox, and premium motion design.",
+    tech: ["Next.js", "Framer Motion", "Tailwind CSS", "shadcn/ui"],
+    category: "frontend",
+    image: "/projects/velmont.png",
+    link: "https://hotel-green-iota.vercel.app/",
+    repo: "https://github.com/febrianrachmat/hotel",
   },
   {
-    title: "Weather Dashboard",
+    title: "RevoBank",
     description:
-      "Weather dashboard with 7-day forecast and favorite locations using public APIs.",
-    tech: ["React", "Tailwind CSS", "OpenWeather API"],
-    link: "#",
-    repo: "https://github.com/febrianrachmat",
+      "Banking REST API with JWT auth, account management, and transactions (deposit, withdraw, transfer). Deployed on Railway with Swagger documentation.",
+    tech: ["NestJS", "Prisma", "PostgreSQL", "JWT", "Swagger"],
+    category: "backend",
+    image: "/projects/revobank.png",
+    repo: "https://github.com/Revou-FSSE-Oct25/milestone-4-febrianrachmat-1",
+    apiLink: "https://revobank-backend-production.up.railway.app/api",
   },
 ];
 
