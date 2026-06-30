@@ -37,6 +37,7 @@ export const profile = {
   name: "Rachmat Febrian",
   initials: "FR",
   role: "Full Stack Software Engineer",
+  avatarUrl: "/profile.png",
   tagline:
     "I build fast, accessible, and well-crafted web experiences from front-end to back-end.",
   email: "febrian.rachmat11@gmail.com",

@@ -43,14 +43,16 @@ export default function Sidebar() {
         transition={{ duration: 0.6, delay: 0.1 }}
       >
         <div>
-          <Image
-            src="/logo-rf.png"
-            alt={`${profile.name} logo`}
-            width={1024}
-            height={682}
-            priority
-            className="mb-6 h-35 w-auto drop-shadow-lg sm:h-40"
-          />
+          <div className="relative mb-6 h-36 w-36 overflow-hidden rounded-2xl border border-accent/25 shadow-lg shadow-black/20 ring-1 ring-white/10 sm:h-40 sm:w-40">
+            <Image
+              src={profile.avatarUrl}
+              alt={`Professional headshot of ${profile.name}, Full Stack Software Engineer`}
+              fill
+              sizes="(max-width: 640px) 144px, 160px"
+              priority
+              className="object-cover object-[center_15%]"
+            />
+          </div>
           <h1 className="text-gradient inline-block pb-1 text-4xl font-bold tracking-tight sm:text-5xl">
             {profile.name}
           </h1>
