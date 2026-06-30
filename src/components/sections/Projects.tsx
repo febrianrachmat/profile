@@ -129,6 +129,21 @@ export default function Projects() {
                         <p className="mt-2 flex-1 text-sm leading-relaxed text-slate">
                           {project.description}
                         </p>
+                        {project.keyFeatures && project.keyFeatures.length > 0 && (
+                          <div className="mt-4">
+                            <p className="mb-2 font-mono text-xs uppercase tracking-widest text-accent">
+                              Key Features
+                            </p>
+                            <ul className="space-y-1.5 text-sm leading-relaxed text-slate">
+                              {project.keyFeatures.map((feature) => (
+                                <li key={feature} className="flex gap-2">
+                                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" aria-hidden />
+                                  <span>{feature}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                         <ul className="mt-4 flex flex-wrap gap-x-3 gap-y-2 font-mono text-xs text-slate">
                           {project.tech.map((tech) => (
                             <li key={tech}>{tech}</li>

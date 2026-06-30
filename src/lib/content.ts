@@ -8,6 +8,7 @@ export type ProjectRepo = {
 export type Project = {
   title: string;
   description: string;
+  keyFeatures?: string[];
   tech: string[];
   category: ProjectCategory;
   image: string;
@@ -26,8 +27,9 @@ export const projectCategories: {
   { id: "backend", label: "Backend" },
 ];
 
-export type SkillGroup = {
-  category: string;
+export type SkillTier = {
+  label: string;
+  description: string;
   items: string[];
 };
 
@@ -57,16 +59,21 @@ export const navItems = [
 ] as const;
 
 export const about = [
-  "Hi! I'm Febrian, a software engineer who loves building digital products at the intersection of beautiful design and clean, scalable code.",
-  "As a full stack engineer, I'm comfortable handling the entire development lifecycle — from designing user-friendly interfaces and building reliable APIs to deploying applications to production.",
-  "In my spare time, I enjoy exploring new technologies, contributing to open-source projects, and sipping coffee while reading documentation.",
+  "Hi! I'm Rachmat Febrian — a career-changer who made the leap into tech without any prior IT background. What started as curiosity quickly turned into a deliberate pivot, and I've been building real software ever since.",
+  "I'm currently 7+ months into the Full Stack Software Engineer program at RevoU (started October 2025), where I've gone from fundamentals to shipping production-ready applications across the entire stack.",
+  "On the frontend, I work confidently with React and Next.js. On the backend, I build with NestJS, PostgreSQL, Prisma, and Docker — from API design and database modeling to deployment. So far, I've built and deployed 4 real-world projects, with Kinova as my capstone flagship.",
 ];
 
 export const projects: Project[] = [
   {
     title: "Kinova",
     description:
-      "Physiotherapy booking and consultation platform with patient, physiotherapist, and admin roles — booking, live chat (SSE), payments, OAuth, and admin analytics.",
+      "My capstone full-stack platform that digitizes physiotherapy clinic operations — replacing manual phone bookings and fragmented communication with a unified web app for patients, physiotherapists, and clinic admins. Each role gets a tailored dashboard: patients book sessions and consult online, therapists manage schedules and chat in real time, and admins monitor clinic performance through analytics.",
+    keyFeatures: [
+      "Real-time live chat powered by Server-Sent Events (SSE) — lightweight one-way streaming that keeps conversations instant without the complexity of WebSockets",
+      "End-to-end appointment flow with integrated payment gateway and Google OAuth, so users can sign up and pay in a few clicks",
+      "Role-based access control (JWT) across three user types, with an admin analytics dashboard for appointment trends and clinic insights",
+    ],
     tech: ["Next.js", "NestJS", "Prisma", "PostgreSQL", "JWT", "SSE"],
     category: "fullstack",
     image: "/projects/kinova.png",
@@ -115,21 +122,20 @@ export const projects: Project[] = [
   },
 ];
 
-export const skills: SkillGroup[] = [
+export const skillTiers: SkillTier[] = [
   {
-    category: "Languages",
-    items: ["TypeScript", "JavaScript", "Python", "SQL", "HTML & CSS"],
+    label: "Core Stack",
+    description: "Technologies I use daily and am most confident building with",
+    items: ["Next.js", "React", "NestJS", "PostgreSQL", "Prisma", "TypeScript"],
   },
   {
-    category: "Frontend",
-    items: ["React", "Next.js", "Vue.js", "Tailwind CSS", "Framer Motion"],
+    label: "Familiar / Growing",
+    description: "Technologies I've worked with and continue to deepen",
+    items: ["Vue.js", "GraphQL", "MongoDB", "Docker"],
   },
   {
-    category: "Backend",
-    items: ["Node.js", "Express", "NestJS", "REST API", "GraphQL"],
-  },
-  {
-    category: "Database & DevOps",
-    items: ["PostgreSQL", "MongoDB", "Prisma", "Docker", "Git", "Vercel"],
+    label: "Basic / Supporting",
+    description: "Tools I use to support development and UI polish",
+    items: ["Python", "Framer Motion"],
   },
 ];

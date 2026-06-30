@@ -3,7 +3,32 @@
 import { profile } from "@/lib/content";
 import Reveal from "../Reveal";
 import Magnetic from "../Magnetic";
-import { MailIcon, WhatsAppIcon } from "../Icons";
+import Boop from "../Boop";
+import {
+  GitHubIcon,
+  InstagramIcon,
+  LinkedInIcon,
+  MailIcon,
+  WhatsAppIcon,
+} from "../Icons";
+
+const socialLinks = [
+  {
+    label: "LinkedIn",
+    href: profile.socials.linkedin,
+    icon: LinkedInIcon,
+  },
+  {
+    label: "GitHub",
+    href: profile.socials.github,
+    icon: GitHubIcon,
+  },
+  {
+    label: "Instagram",
+    href: profile.socials.instagram,
+    icon: InstagramIcon,
+  },
+] as const;
 
 export default function Contact() {
   const waMessage = encodeURIComponent(
@@ -22,8 +47,8 @@ export default function Contact() {
           Get In Touch
         </h3>
         <p className="mx-auto mt-5 max-w-md leading-relaxed text-slate">
-          I&apos;m always open to discussing new opportunities, collaborations, or
-          just to say hi. Feel free to reach out!
+          I&apos;m open to new opportunities, collaborations, or a friendly hello.
+          Reach out via WhatsApp, email, or connect with me on social media.
         </p>
         <Magnetic className="mt-8">
           <a
@@ -36,7 +61,30 @@ export default function Contact() {
             Hello !
           </a>
         </Magnetic>
-        <p className="mt-6 flex items-center justify-center gap-2 text-sm text-slate">
+        <div className="mt-8">
+          <p className="mb-4 font-mono text-xs uppercase tracking-widest text-slate">
+            Find me online
+          </p>
+          <div className="flex items-center justify-center gap-4">
+            {socialLinks.map(({ label, href, icon: Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={label}
+                title={label}
+                className="inline-flex items-center gap-2 rounded-md border border-white/10 px-4 py-2.5 text-sm text-slate-light transition-colors hover:border-accent hover:text-accent"
+              >
+                <Boop rotation={-10} scale={1.15}>
+                  <Icon className="h-5 w-5" />
+                </Boop>
+                <span>{label}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+        <p className="mt-8 flex items-center justify-center gap-2 text-sm text-slate">
           <MailIcon className="h-4 w-4" />
           <span>or email me at</span>
           <a
