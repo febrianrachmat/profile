@@ -7,6 +7,8 @@ export type ProjectRepo = {
 
 export type Project = {
   title: string;
+  subtitle: string;
+  period: string;
   description: string;
   keyFeatures?: string[];
   tech: string[];
@@ -35,9 +37,12 @@ export type SkillTier = {
 
 export const profile = {
   name: "Rachmat Febrian",
+  handle: "febrianrachmat",
   initials: "FR",
   role: "Full Stack Software Engineer",
   avatarUrl: "/profile.png",
+  logoUrl: "/logo-rf.png",
+  heroHeadline: "Rachmat Febrian",
   tagline:
     "I build fast, accessible, and well-crafted web experiences from front-end to back-end.",
   email: "febrian.rachmat11@gmail.com",
@@ -55,25 +60,83 @@ export const profile = {
 export const navItems = [
   { id: "about", label: "About" },
   { id: "projects", label: "Projects" },
-  { id: "skills", label: "Skills" },
   { id: "contact", label: "Contact" },
 ] as const;
 
-export const about = [
-  "Hi! I'm Rachmat Febrian — a career-changer who made the leap into tech without any prior IT background. What started as curiosity quickly turned into a deliberate pivot, and I've been building real software ever since.",
-  "I'm currently 7+ months into the Full Stack Software Engineer program at RevoU (started October 2025), where I've gone from fundamentals to shipping production-ready applications across the entire stack.",
-  "On the frontend, I work confidently with React and Next.js. On the backend, I build with NestJS, PostgreSQL, Prisma, and Docker — from API design and database modeling to deployment. So far, I've built and deployed 4 real-world projects, with Kinova as my capstone flagship.",
+export const marqueePhrases = [
+  "A career-changer who ships real products.",
+  "A full stack engineer who builds end to end.",
+];
+
+export type AboutLine = {
+  text: string;
+  style: "bold" | "italic" | "pill";
+};
+
+export const aboutHeadline: AboutLine[] = [
+  { text: "A career-changer who", style: "bold" },
+  { text: "ships real products.", style: "italic" },
+  { text: "A full stack engineer", style: "bold" },
+  { text: "who builds", style: "bold" },
+  { text: "end to end.", style: "pill" },
+];
+
+export type AboutSegment = {
+  text: string;
+  bold?: boolean;
+};
+
+export const about: AboutSegment[][] = [
+  [
+    {
+      text: "I'm a career-changer who pivoted into tech without any prior IT background. What started as curiosity quickly became a deliberate path — and I've been building ",
+    },
+    { text: "production-ready software", bold: true },
+    { text: " ever since." },
+  ],
+  [
+    {
+      text: "I'm 7+ months into the Full Stack Software Engineer program at RevoU (started October 2025), going from fundamentals to deploying real applications across the entire stack.",
+    },
+  ],
+  [
+    {
+      text: "My goal is to contribute as a full stack engineer, ",
+    },
+    {
+      text: "turning ideas into thoughtful, user-focused digital products through clean code and technical execution.",
+      bold: true,
+    },
+  ],
+];
+
+export const craftIntro =
+  "Combining a career-changer's drive with modern full stack development to build interfaces and systems that are scalable, accessible, and ready for production.";
+
+export const skillTiers: SkillTier[] = [
+  {
+    label: "Core Stack",
+    description: "Technologies I use daily and am most confident building with",
+    items: ["Next.js", "React", "NestJS", "PostgreSQL", "Prisma", "TypeScript"],
+  },
+  {
+    label: "Familiar / Growing",
+    description: "Technologies I've worked with and continue to deepen",
+    items: ["Vue.js", "GraphQL", "MongoDB", "Docker", "Python", "Framer Motion"],
+  },
 ];
 
 export const projects: Project[] = [
   {
     title: "Kinova",
+    subtitle: "Physiotherapy Booking Platform",
+    period: "Capstone · 2026",
     description:
       "My capstone full-stack platform that digitizes physiotherapy clinic operations — replacing manual phone bookings and fragmented communication with a unified web app for patients, physiotherapists, and clinic admins. Each role gets a tailored dashboard: patients book sessions and consult online, therapists manage schedules and chat in real time, and admins monitor clinic performance through analytics.",
     keyFeatures: [
-      "Real-time live chat powered by Server-Sent Events (SSE) — lightweight one-way streaming that keeps conversations instant without the complexity of WebSockets",
-      "End-to-end appointment flow with integrated payment gateway and Google OAuth, so users can sign up and pay in a few clicks",
-      "Role-based access control (JWT) across three user types, with an admin analytics dashboard for appointment trends and clinic insights",
+      "Real-time live chat powered by Server-Sent Events (SSE)",
+      "End-to-end appointment flow with payment gateway and Google OAuth",
+      "Role-based access control (JWT) with admin analytics dashboard",
     ],
     tech: ["Next.js", "NestJS", "Prisma", "PostgreSQL", "JWT", "SSE"],
     category: "fullstack",
@@ -93,6 +156,8 @@ export const projects: Project[] = [
   },
   {
     title: "VELDT",
+    subtitle: "Premium Fashion E-Commerce",
+    period: "Frontend · 2026",
     description:
       "Premium fashion e-commerce with editorial homepage, bento shop grid, cart and checkout flow, bilingual UI (EN/ID), and admin demo.",
     tech: ["Next.js", "TypeScript", "TanStack Query", "Zustand", "Tailwind CSS"],
@@ -103,6 +168,8 @@ export const projects: Project[] = [
   },
   {
     title: "VELMONT",
+    subtitle: "Luxury Hotel Booking",
+    period: "Frontend · 2026",
     description:
       "Luxury hotel booking showcase with availability calendar, multi-step booking flow, gallery lightbox, and premium motion design.",
     tech: ["Next.js", "Framer Motion", "Tailwind CSS", "shadcn/ui"],
@@ -113,6 +180,8 @@ export const projects: Project[] = [
   },
   {
     title: "RevoBank",
+    subtitle: "Banking REST API",
+    period: "Backend · 2026",
     description:
       "Banking REST API with JWT auth, account management, and transactions (deposit, withdraw, transfer). Deployed on Railway with Swagger documentation.",
     tech: ["NestJS", "Prisma", "PostgreSQL", "JWT", "Swagger"],
@@ -123,20 +192,8 @@ export const projects: Project[] = [
   },
 ];
 
-export const skillTiers: SkillTier[] = [
-  {
-    label: "Core Stack",
-    description: "Technologies I use daily and am most confident building with",
-    items: ["Next.js", "React", "NestJS", "PostgreSQL", "Prisma", "TypeScript"],
-  },
-  {
-    label: "Familiar / Growing",
-    description: "Technologies I've worked with and continue to deepen",
-    items: ["Vue.js", "GraphQL", "MongoDB", "Docker"],
-  },
-  {
-    label: "Basic / Supporting",
-    description: "Tools I use to support development and UI polish",
-    items: ["Python", "Framer Motion"],
-  },
-];
+export const contactCopy = {
+  heading: "Let's Start Something",
+  intro:
+    "I'm currently open to new opportunities and collaborations. If you think my engineering skills are a good fit for your team, let's start a dialogue.",
+};

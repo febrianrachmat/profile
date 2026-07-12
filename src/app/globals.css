@@ -3,55 +3,30 @@
 @tailwind utilities;
 
 :root,
-[data-theme="dark"] {
-  --color-navy: 10 25 47;
-  --color-navy-light: 17 34 64;
-  --color-navy-lighter: 35 53 84;
-  --color-slate: 136 146 176;
-  --color-slate-light: 168 178 209;
-  --color-slate-lighter: 204 214 246;
-  --color-accent: 100 255 218;
-  --color-accent-dark: 15 155 142;
-  --spotlight: 100 255 218;
-  --scrollbar-hover: 45 66 99;
-
-  /* Surfaces (translucent over the navy backdrop in dark mode) */
-  --surface: rgb(17 34 64 / 0.3);
-  --surface-hover: rgb(17 34 64 / 0.6);
-  --surface-border: rgb(35 53 84 / 0.6);
-  --card-shadow: 0 0 #0000;
-  --card-shadow-hover: 0 0 #0000;
-  --card-blur: none;
-  --bg-gradient: none;
+[data-theme="light"] {
+  --color-bg: 250 249 246;
+  --color-bg-muted: 244 242 237;
+  --color-ink: 26 26 26;
+  --color-ink-muted: 82 82 82;
+  --color-ink-soft: 115 115 115;
+  --color-border: 229 229 224;
+  --color-accent: 17 94 89;
+  --color-accent-dark: 13 74 70;
+  --color-surface: 255 255 255;
+  --color-marquee: 38 38 38;
 }
 
-[data-theme="light"] {
-  /* Icy Blue: bright, cold cyan-tinted backdrop with crisp glassy cards */
-  --color-navy: 233 244 250;
-  --color-navy-light: 255 255 255;
-  --color-navy-lighter: 195 224 238;
-  --color-slate: 60 85 102;
-  --color-slate-light: 40 62 79;
-  --color-slate-lighter: 11 44 68;
-  --color-accent: 8 145 178;
-  --color-accent-dark: 14 116 144;
-  --spotlight: 34 211 238;
-  --scrollbar-hover: 163 199 216;
-
-  /* Crisp icy cards: mostly opaque white + light frost over a cool gradient */
-  --surface: rgb(255 255 255 / 0.85);
-  --surface-hover: rgb(255 255 255 / 0.95);
-  --surface-border: rgb(195 224 238 / 0.9);
-  --card-shadow: 0 4px 22px -10px rgb(11 44 68 / 0.16);
-  --card-shadow-hover: 0 18px 36px -12px rgb(11 44 68 / 0.24);
-  --card-blur: blur(6px) saturate(130%);
-  --bg-gradient: radial-gradient(
-      1200px circle at 0% 0%,
-      rgb(6 182 212 / 0.1),
-      transparent 42%
-    ),
-    radial-gradient(1000px circle at 100% 0%, rgb(34 211 238 / 0.09), transparent 38%),
-    radial-gradient(900px circle at 100% 100%, rgb(56 189 248 / 0.07), transparent 40%);
+[data-theme="dark"] {
+  --color-bg: 15 15 15;
+  --color-bg-muted: 23 23 23;
+  --color-ink: 245 245 244;
+  --color-ink-muted: 163 163 163;
+  --color-ink-soft: 115 115 115;
+  --color-border: 38 38 38;
+  --color-accent: 45 212 191;
+  --color-accent-dark: 20 184 166;
+  --color-surface: 23 23 23;
+  --color-marquee: 229 229 224;
 }
 
 html {
@@ -59,100 +34,96 @@ html {
 }
 
 body {
-  background-color: rgb(var(--color-navy));
-  background-image: var(--bg-gradient);
-  background-attachment: fixed;
-  color: rgb(var(--color-slate));
+  background-color: rgb(var(--color-bg));
+  color: rgb(var(--color-ink-muted));
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: rgb(var(--color-navy));
+  background: rgb(var(--color-bg));
 }
 ::-webkit-scrollbar-thumb {
-  background: rgb(var(--color-navy-lighter));
-  border-radius: 6px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgb(var(--scrollbar-hover));
+  background: rgb(var(--color-border));
+  border-radius: 999px;
 }
 
 ::selection {
-  background: rgb(var(--color-accent) / 0.25);
-  color: rgb(var(--color-slate-lighter));
+  background: rgb(var(--color-accent) / 0.2);
+  color: rgb(var(--color-ink));
 }
 
 @layer components {
-  .card {
-    background-color: var(--surface);
-    border: 1px solid var(--surface-border);
-    box-shadow: var(--card-shadow);
-    backdrop-filter: var(--card-blur);
-    -webkit-backdrop-filter: var(--card-blur);
-    transition: background-color 0.3s ease, border-color 0.2s ease,
-      box-shadow 0.3s ease, transform 0.3s ease;
+  .section-container {
+    @apply mx-auto w-full max-w-6xl px-6 sm:px-10 lg:px-16;
   }
-  .card-interactive:hover {
-    background-color: var(--surface-hover);
-    border-color: rgb(var(--color-accent) / 0.4);
-    box-shadow: var(--card-shadow-hover);
+
+  .section-label {
+    @apply font-mono text-xs uppercase tracking-[0.25em] text-ink-soft;
   }
-  .row-hover {
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
+  .section-title {
+    @apply font-display text-3xl font-normal text-ink sm:text-4xl lg:text-5xl;
   }
-  .row-hover:hover {
-    background-color: var(--surface-hover);
-    box-shadow: var(--card-shadow);
+
+  .filter-pill {
+    @apply rounded-full border border-border px-4 py-2 text-sm transition-colors;
   }
-  .section-heading {
-    @apply flex items-center gap-4 text-2xl font-bold text-slate-lighter sm:text-3xl;
+
+  .filter-pill-active {
+    @apply border-ink bg-ink text-bg;
   }
-  .section-heading::after {
-    content: "";
-    @apply block h-px w-full max-w-[200px] bg-navy-lighter;
-  }
-  .link-underline {
-    @apply relative text-slate-light transition-colors duration-200 hover:text-accent;
-  }
-  .mono {
-    @apply font-mono text-accent;
-  }
-  .text-gradient {
-    background-image: linear-gradient(
-      100deg,
-      rgb(var(--color-slate-lighter)) 0%,
-      rgb(var(--color-accent)) 45%,
-      rgb(var(--color-slate-lighter)) 90%
-    );
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-    animation: shimmer 6s linear infinite;
+
+  .filter-pill-inactive {
+    @apply text-ink-muted hover:border-ink hover:text-ink;
   }
 }
 
-/* Spotlight overlay that follows the cursor */
-.spotlight {
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  transition: background 0.15s ease;
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee linear infinite;
+}
+
+.marquee-fade {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+}
+
+.marquee-track-reverse {
+  animation-direction: reverse;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  .text-gradient {
+  .marquee-track {
     animation: none;
   }
 }

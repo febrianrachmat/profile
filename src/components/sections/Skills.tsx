@@ -1,39 +1,42 @@
 "use client";
 
-import { skillTiers } from "@/lib/content";
+import { craftIntro, skillTiers } from "@/lib/content";
+import SkillMarquee from "../SkillMarquee";
 import Reveal from "../Reveal";
 
-const tierStyles = [
-  "border-accent/30 bg-accent/5",
-  "border-white/10 bg-navy/40",
-  "border-white/5 bg-navy/20",
-];
-
 export default function Skills() {
+  const coreItems = skillTiers[0].items.map((name) => ({ name }));
+  const growingItems = skillTiers[1].items.map((name) => ({ name }));
+
   return (
-    <section id="skills" className="scroll-mt-24 py-12 lg:py-24" aria-label="Skills">
-      <Reveal>
-        <h3 className="section-heading mb-8">Skills & Technologies</h3>
-      </Reveal>
-      <div className="space-y-5">
-        {skillTiers.map((tier, i) => (
-          <Reveal key={tier.label} delay={i * 0.05}>
-            <div className={`card rounded-xl border p-6 ${tierStyles[i] ?? tierStyles[2]}`}>
-              <div className="mb-4">
-                <h4 className="font-mono text-sm uppercase tracking-widest text-accent">
-                  {tier.label}
-                </h4>
-                <p className="mt-1 text-sm text-slate">{tier.description}</p>
-              </div>
-              <ul className="flex flex-wrap gap-2">
+    <section id="skills" className="scroll-mt-24 border-b border-border bg-bg-muted/50" aria-label="Skills">
+      <div className="section-container py-16 sm:py-20 lg:py-24">
+        <Reveal>
+          <h2 className="section-title">Craft &amp; Technology</h2>
+          <p className="mt-6 max-w-3xl text-base leading-relaxed text-ink-muted sm:text-lg">
+            {craftIntro}
+          </p>
+        </Reveal>
+      </div>
+
+      <div className="space-y-2 border-y border-border bg-bg-muted/30 py-2">
+        <SkillMarquee items={coreItems} duration={45} />
+        <SkillMarquee items={growingItems} reverse duration={50} />
+      </div>
+
+      <div className="section-container grid gap-6 py-12 sm:grid-cols-2">
+        {skillTiers.map((tier, index) => (
+          <Reveal key={tier.label} delay={index * 0.05}>
+            <div className="rounded-2xl border border-border bg-surface p-6">
+              <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
+                {tier.label}
+              </h3>
+              <p className="mt-2 text-sm text-ink-soft">{tier.description}</p>
+              <ul className="mt-4 flex flex-wrap gap-2">
                 {tier.items.map((item) => (
                   <li
                     key={item}
-                    className={`rounded-md px-3 py-1.5 text-sm transition-colors hover:text-accent ${
-                      i === 0
-                        ? "bg-accent/10 font-medium text-slate-lighter"
-                        : "bg-navy text-slate-light"
-                    }`}
+                    className="rounded-full border border-border px-3 py-1.5 text-sm text-ink-muted"
                   >
                     {item}
                   </li>

@@ -1,163 +1,229 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { projectCategories, projects } from "@/lib/content";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  projectCategories,
+  projects,
+  type Project,
+  type ProjectCategory,
+} from "@/lib/content";
 import Reveal from "../Reveal";
-import Tilt from "../Tilt";
-import Boop from "../Boop";
-import { ExternalLinkIcon, FolderIcon, GitHubIcon } from "../Icons";
+import { ExternalLinkIcon, GitHubIcon } from "../Icons";
 
-function ProjectLinks({
-  link,
-  repo,
-  repos,
-  apiLink,
-}: {
-  link?: string;
-  repo?: string;
-  repos?: { label: string; url: string }[];
-  apiLink?: string;
-}) {
+type FilterId = "all" | ProjectCategory;
+
+const filters: { id: FilterId; label: string }[] = [
+  { id: "all", label: "Show All" },
+  ...projectCategories.map((category) => ({
+    id: category.id,
+    label: category.label,
+  })),
+];
+
+function ProjectLinks({ project }: { project: Project }) {
+  const primaryLink = project.link ?? project.repo ?? project.repos?.[0]?.url ?? project.apiLink;
+
+  if (!primaryLink) return null;
+
+  const isExternal = Boolean(project.link || project.apiLink);
+
   return (
-    <div className="flex flex-wrap items-center justify-end gap-2 text-slate-light">
-      {repos?.map((item) => (
-        <a
-          key={item.url}
-          href={item.url}
-          target="_blank"
-          rel="noreferrer"
-          aria-label={`View ${item.label} code`}
-          title={item.label}
-          className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wide transition-colors hover:bg-accent/10 hover:text-accent"
-        >
-          <GitHubIcon className="h-4 w-4" />
-          <span className="hidden sm:inline">{item.label}</span>
-        </a>
-      ))}
-      {repo && !repos?.length && (
-        <a
-          href={repo}
-          target="_blank"
-          rel="noreferrer"
-          aria-label="View code"
-          className="transition-colors hover:text-accent"
-        >
-          <GitHubIcon className="h-5 w-5" />
-        </a>
+    <a
+      href={primaryLink}
+      target="_blank"
+      rel="noreferrer"
+      className="inline-flex items-center gap-2 rounded-full border border-ink bg-ink px-5 py-2.5 text-sm font-medium text-bg transition-colors hover:bg-accent hover:border-accent"
+    >
+      View Project
+      {isExternal ? (
+        <ExternalLinkIcon className="h-4 w-4" />
+      ) : (
+        <GitHubIcon className="h-4 w-4" />
       )}
-      {link && (
-        <a
-          href={link}
-          target="_blank"
-          rel="noreferrer"
-          aria-label="View live demo"
-          title="Live demo"
-          className="transition-colors hover:text-accent"
-        >
-          <ExternalLinkIcon className="h-5 w-5" />
-        </a>
-      )}
-      {apiLink && (
-        <a
-          href={apiLink}
-          target="_blank"
-          rel="noreferrer"
-          aria-label="View API documentation"
-          title="API docs"
-          className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wide transition-colors hover:bg-accent/10 hover:text-accent"
-        >
-          <ExternalLinkIcon className="h-4 w-4" />
-          <span className="hidden sm:inline">API</span>
-        </a>
-      )}
-    </div>
+    </a>
   );
 }
 
 export default function Projects() {
+  const [filter, setFilter] = useState<FilterId>("all");
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const filteredProjects = useMemo(
+    () =>
+      filter === "all"
+        ? projects
+        : projects.filter((project) => project.category === filter),
+    [filter],
+  );
+
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [filter]);
+
+  const activeProject = filteredProjects[activeIndex] ?? filteredProjects[0];
+
+  if (!activeProject) return null;
+
+  const categoryLabel =
+    projectCategories.find((category) => category.id === activeProject.category)?.label ??
+    activeProject.category;
+
   return (
-    <section id="projects" className="scroll-mt-24 py-12 lg:py-24" aria-label="Projects">
-      <Reveal>
-        <h3 className="section-heading mb-8">Featured Projects</h3>
-      </Reveal>
+    <section id="projects" className="scroll-mt-24 border-b border-border py-16 sm:py-20 lg:py-24" aria-label="Projects">
+      <div className="section-container">
+        <Reveal>
+          <h2 className="section-title">Curated Projects</h2>
+        </Reveal>
 
-      <div className="space-y-12">
-        {projectCategories.map((category, categoryIndex) => {
-          const categoryProjects = projects.filter(
-            (project) => project.category === category.id,
-          );
+        <Reveal delay={0.05}>
+          <div className="mt-8 flex flex-wrap gap-3">
+            {filters.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setFilter(item.id)}
+                className={`filter-pill ${
+                  filter === item.id ? "filter-pill-active" : "filter-pill-inactive"
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </Reveal>
 
-          if (categoryProjects.length === 0) return null;
+        <div className="mt-12 grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
+          <Reveal delay={0.1}>
+            <div className="relative mx-auto h-[320px] w-full max-w-md sm:h-[380px]">
+              {filteredProjects.map((project, index) => {
+                const offset =
+                  (index - activeIndex + filteredProjects.length) %
+                  filteredProjects.length;
 
-          return (
-            <div key={category.id}>
-              <Reveal delay={categoryIndex * 0.05}>
-                <h4 className="mb-5 font-mono text-sm uppercase tracking-widest text-accent">
-                  {category.label}
-                </h4>
-              </Reveal>
-              <div className="grid gap-5 sm:grid-cols-2">
-                {categoryProjects.map((project, i) => (
-                  <Reveal key={project.title} delay={i * 0.05} className="h-full">
-                    <Tilt className="h-full">
-                      <article className="card card-interactive group flex h-full flex-col overflow-hidden rounded-xl hover:-translate-y-1">
-                        <div className="relative aspect-[16/10] overflow-hidden border-b border-white/5 bg-navy/40">
-                          <Image
-                            src={project.image}
-                            alt={`${project.title} project screenshot`}
-                            fill
-                            sizes="(max-width: 640px) 100vw, 50vw"
-                            className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
-                          />
-                          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-navy/80 via-transparent to-transparent opacity-60" />
-                        </div>
-                        <div className="flex flex-1 flex-col p-6">
-                        <div className="mb-4 flex items-start justify-between gap-3">
-                          <Boop rotation={-10} scale={1.15} y={-2}>
-                            <FolderIcon className="h-9 w-9 shrink-0 text-accent" />
-                          </Boop>
-                          <ProjectLinks
-                            link={project.link}
-                            repo={project.repo}
-                            repos={project.repos}
-                            apiLink={project.apiLink}
-                          />
-                        </div>
-                        <h5 className="text-lg font-semibold text-slate-lighter transition-colors group-hover:text-accent">
-                          {project.title}
-                        </h5>
-                        <p className="mt-2 flex-1 text-sm leading-relaxed text-slate">
-                          {project.description}
-                        </p>
-                        {project.keyFeatures && project.keyFeatures.length > 0 && (
-                          <div className="mt-4">
-                            <p className="mb-2 font-mono text-xs uppercase tracking-widest text-accent">
-                              Key Features
-                            </p>
-                            <ul className="space-y-1.5 text-sm leading-relaxed text-slate">
-                              {project.keyFeatures.map((feature) => (
-                                <li key={feature} className="flex gap-2">
-                                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" aria-hidden />
-                                  <span>{feature}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                        <ul className="mt-4 flex flex-wrap gap-x-3 gap-y-2 font-mono text-xs text-slate">
-                          {project.tech.map((tech) => (
-                            <li key={tech}>{tech}</li>
-                          ))}
-                        </ul>
-                        </div>
-                      </article>
-                    </Tilt>
-                  </Reveal>
-                ))}
-              </div>
+                if (offset > 2) return null;
+
+                return (
+                  <button
+                    key={project.title}
+                    type="button"
+                    onClick={() => setActiveIndex(index)}
+                    aria-label={`View ${project.title}`}
+                    className="absolute inset-x-0 top-0 transition-all duration-500 ease-out"
+                    style={{
+                      zIndex: 10 - offset,
+                      transform: `translateY(${offset * 18}px) scale(${1 - offset * 0.04})`,
+                      opacity: offset === 0 ? 1 : 0.92 - offset * 0.12,
+                    }}
+                  >
+                    <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-sm">
+                      <div className="relative aspect-[16/10] bg-bg-muted">
+                        <Image
+                          src={project.image}
+                          alt={`${project.title} project screenshot`}
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 480px"
+                          className="object-cover object-top"
+                        />
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
-          );
-        })}
+            <p className="mt-6 text-center text-sm text-ink-soft">
+              * Click on stacked cards above to see other projects
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.15}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeProject.title}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.25 }}
+              >
+                <div className="flex flex-wrap items-center gap-2 text-sm text-ink-soft">
+                  <span>{categoryLabel}</span>
+                  <span aria-hidden>•</span>
+                  <span>{activeProject.period}</span>
+                </div>
+
+                <h3 className="mt-4 font-display text-3xl text-ink sm:text-4xl">
+                  {activeProject.title}
+                </h3>
+                <p className="mt-2 text-base text-ink-muted">{activeProject.subtitle}</p>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {activeProject.tech.map((tech) => (
+                    <span
+                      key={tech}
+                      className="rounded-full border border-border px-3 py-1 font-mono text-xs text-ink-muted"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+
+                <p className="mt-6 text-base leading-relaxed text-ink-muted">
+                  {activeProject.description}
+                </p>
+
+                {activeProject.keyFeatures && activeProject.keyFeatures.length > 0 && (
+                  <ul className="mt-6 space-y-2 text-sm text-ink-muted">
+                    {activeProject.keyFeatures.map((feature) => (
+                      <li key={feature} className="flex gap-2">
+                        <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" aria-hidden />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <ProjectLinks project={activeProject} />
+                  {activeProject.repos?.map((repo) => (
+                    <a
+                      key={repo.url}
+                      href={repo.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm text-ink-muted transition-colors hover:border-ink hover:text-ink"
+                    >
+                      <GitHubIcon className="h-4 w-4" />
+                      {repo.label}
+                    </a>
+                  ))}
+                  {activeProject.repo && !activeProject.repos?.length && (
+                    <a
+                      href={activeProject.repo}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm text-ink-muted transition-colors hover:border-ink hover:text-ink"
+                    >
+                      <GitHubIcon className="h-4 w-4" />
+                      Code
+                    </a>
+                  )}
+                  {activeProject.apiLink && (
+                    <a
+                      href={activeProject.apiLink}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm text-ink-muted transition-colors hover:border-ink hover:text-ink"
+                    >
+                      <ExternalLinkIcon className="h-4 w-4" />
+                      API Docs
+                    </a>
+                  )}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
