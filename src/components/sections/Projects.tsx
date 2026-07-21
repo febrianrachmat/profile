@@ -2,7 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import {
+  AnimatePresence,
+  LayoutGroup,
+  motion,
+  useReducedMotion,
+} from "framer-motion";
 import {
   projectCategories,
   projects,
@@ -46,12 +51,14 @@ function ProjectLinks({ project }: { project: Project }) {
 function ProjectCardFace({
   project,
   imageSrc,
+  indexLabel,
 }: {
   project: Project;
   imageSrc?: string;
+  indexLabel?: string;
 }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-[0_18px_50px_-28px_rgb(var(--color-ink)/0.45)]">
       <div className="relative aspect-[16/10] bg-bg-muted">
         <Image
           src={imageSrc ?? project.image}
@@ -60,6 +67,11 @@ function ProjectCardFace({
           sizes="(max-width: 1024px) 100vw, 480px"
           className="object-cover object-top"
         />
+        {indexLabel && (
+          <span className="absolute left-4 top-4 rounded-full border border-bg/20 bg-ink/55 px-2.5 py-1 font-mono text-[10px] tracking-[0.2em] text-bg backdrop-blur-sm">
+            {indexLabel}
+          </span>
+        )}
       </div>
     </div>
   );
@@ -79,11 +91,16 @@ function ProjectGallery({
   const { locale } = useLocale();
 
   return (
-    <div className="mt-6">
-      <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-soft">
-        {t(ui.projectScreenshots, locale)}
-      </p>
-      <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+    <div className="mt-5">
+      <div className="mb-3 flex items-baseline justify-between gap-3">
+        <p className="text-xs font-medium uppercase tracking-[0.18em] text-ink-soft">
+          {t(ui.projectScreenshots, locale)}
+        </p>
+        <p className="font-mono text-[10px] tracking-wider text-ink-soft">
+          {images.findIndex((src) => src === activeSrc) + 1}/{images.length}
+        </p>
+      </div>
+      <div className="-mx-1 flex gap-2.5 overflow-x-auto px-1 pb-1">
         {images.map((src, index) => {
           const selected = src === activeSrc;
           return (
@@ -93,17 +110,17 @@ function ProjectGallery({
               onClick={() => onSelect(src)}
               aria-label={`${projectTitle} screenshot ${index + 1}`}
               aria-pressed={selected}
-              className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-lg border transition ${
+              className={`relative h-[4.25rem] w-[6.5rem] shrink-0 overflow-hidden rounded-lg border transition duration-200 sm:h-20 sm:w-28 ${
                 selected
-                  ? "border-ink ring-2 ring-ink/20"
-                  : "border-border opacity-80 hover:opacity-100"
+                  ? "border-ink ring-2 ring-accent/30"
+                  : "border-border opacity-70 hover:opacity-100"
               }`}
             >
               <Image
                 src={src}
                 alt=""
                 fill
-                sizes="96px"
+                sizes="112px"
                 className="object-cover object-top"
               />
             </button>
@@ -116,6 +133,7 @@ function ProjectGallery({
 
 export default function Projects() {
   const { locale } = useLocale();
+  const reduced = useReducedMotion();
   const [filter, setFilter] = useState<FilterId>("all");
   const [activeIndex, setActiveIndex] = useState(0);
   const [previewSrc, setPreviewSrc] = useState<string | null>(null);
@@ -147,16 +165,32 @@ export default function Projects() {
     setPreviewSrc(null);
   }, [activeProject?.title]);
 
-  if (!activeProject) return null;
+  if (!activeProject) {
+    return (
+      <section
+        id="projects"
+        className="scroll-mt-24 border-b border-border py-16 sm:py-20 lg:py-24"
+        aria-label={t(ui.curatedProjects, locale)}
+      >
+        <div className="section-container">
+          <h2 className="section-title">{t(ui.curatedProjects, locale)}</h2>
+          <p className="mt-8 text-ink-soft">{t(ui.noProjectsInCategory, locale)}</p>
+        </div>
+      </section>
+    );
+  }
 
   const gallery = activeProject.images?.length
     ? activeProject.images
     : [activeProject.image];
   const activeImage = previewSrc ?? activeProject.image;
+  const hasGallery = gallery.length > 1;
 
   const categoryLabel =
     projectCategories.find((category) => category.id === activeProject.category)
       ?.label ?? { en: activeProject.category, id: activeProject.category };
+
+  const activeIndexLabel = String(activeIndex + 1).padStart(2, "0");
 
   return (
     <section
@@ -166,7 +200,17 @@ export default function Projects() {
     >
       <div className="section-container">
         <Reveal>
-          <h2 className="section-title">{t(ui.curatedProjects, locale)}</h2>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2 className="section-title">{t(ui.curatedProjects, locale)}</h2>
+              <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-muted sm:text-lg">
+                {t(ui.projectsIntro, locale)}
+              </p>
+            </div>
+            <p className="font-mono text-xs tracking-[0.2em] text-ink-soft">
+              {activeIndexLabel} / {String(filteredProjects.length).padStart(2, "0")}
+            </p>
+          </div>
         </Reveal>
 
         <Reveal delay={0.05}>
@@ -180,14 +224,20 @@ export default function Projects() {
                     type="button"
                     onClick={() => setFilter(item.id)}
                     className={`relative filter-pill ${
-                      selected ? "border-transparent text-bg" : "filter-pill-inactive"
+                      selected
+                        ? "border-transparent text-bg"
+                        : "filter-pill-inactive"
                     }`}
                   >
                     {selected && (
                       <motion.span
                         layoutId="project-filter-pill"
                         className="absolute inset-0 rounded-full bg-ink"
-                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 380,
+                          damping: 30,
+                        }}
                       />
                     )}
                     <span className="relative z-10">{item.label}</span>
@@ -198,126 +248,147 @@ export default function Projects() {
           </LayoutGroup>
         </Reveal>
 
-        <div className="mt-12 grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
+        <div className="mt-12 grid gap-12 lg:grid-cols-2 lg:items-start lg:gap-16">
           <Reveal delay={0.1}>
-            <div
-              className="relative mx-auto h-[320px] w-full max-w-md sm:h-[380px]"
-              style={{ perspective: 1100 }}
-            >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={filter}
-                  className="absolute inset-0"
-                  initial={{ opacity: 0, y: 18, rotateX: 8 }}
-                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                  exit={{ opacity: 0, y: -14, rotateX: -6 }}
-                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  {filteredProjects.map((project, index) => {
-                    const offset =
-                      (index - activeIndex + filteredProjects.length) %
-                      filteredProjects.length;
-
-                    if (offset > 2) return null;
-
-                    const stackStyle = {
-                      zIndex: 10 - offset,
-                      transform: `translateY(${offset * 18}px) scale(${1 - offset * 0.04})`,
-                      opacity: offset === 0 ? 1 : 0.92 - offset * 0.12,
-                    } as const;
-
-                    if (offset === 0) {
-                      return (
-                        <Tilt
-                          key={project.title}
-                          max={9}
-                          className="absolute inset-x-0 top-0 z-10"
-                        >
-                          <button
-                            type="button"
-                            onClick={() => setActiveIndex(index)}
-                            aria-label={`View ${project.title}`}
-                            className="w-full text-left"
-                          >
-                            <AnimatePresence mode="wait">
-                              <motion.div
-                                key={activeImage}
-                                initial={{ opacity: 0.4 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0.4 }}
-                                transition={{ duration: 0.2 }}
-                              >
-                                <ProjectCardFace
-                                  project={project}
-                                  imageSrc={
-                                    project.title === activeProject.title
-                                      ? activeImage
-                                      : project.image
-                                  }
-                                />
-                              </motion.div>
-                            </AnimatePresence>
-                          </button>
-                        </Tilt>
-                      );
-                    }
-
-                    return (
-                      <button
-                        key={project.title}
-                        type="button"
-                        onClick={() => setActiveIndex(index)}
-                        aria-label={`View ${project.title}`}
-                        className="absolute inset-x-0 top-0 w-full text-left transition-all duration-500 ease-out"
-                        style={stackStyle}
-                      >
-                        <ProjectCardFace project={project} />
-                      </button>
-                    );
-                  })}
-                </motion.div>
-              </AnimatePresence>
-            </div>
-            <p className="mt-6 text-center text-sm text-ink-soft">
-              {t(ui.projectStackHint, locale)}
-            </p>
-            {gallery.length > 1 && (
-              <ProjectGallery
-                images={gallery}
-                activeSrc={activeImage}
-                onSelect={setPreviewSrc}
-                projectTitle={activeProject.title}
+            <div className="relative">
+              <div
+                className="pointer-events-none absolute -inset-6 rounded-[2rem] bg-[radial-gradient(circle_at_30%_20%,rgb(var(--color-accent)/0.12),transparent_55%)]"
+                aria-hidden
               />
-            )}
+
+              <div
+                className="relative mx-auto h-[300px] w-full max-w-md sm:h-[380px]"
+                style={{ perspective: 1100 }}
+              >
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={filter}
+                    className="absolute inset-0"
+                    initial={reduced ? false : { opacity: 0, y: 18, rotateX: 8 }}
+                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                    exit={reduced ? undefined : { opacity: 0, y: -14, rotateX: -6 }}
+                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    {filteredProjects.map((project, index) => {
+                      const offset =
+                        (index - activeIndex + filteredProjects.length) %
+                        filteredProjects.length;
+
+                      if (offset > 2) return null;
+
+                      const stackStyle = {
+                        zIndex: 10 - offset,
+                        transform: `translateY(${offset * 20}px) scale(${1 - offset * 0.045})`,
+                        opacity: offset === 0 ? 1 : 0.9 - offset * 0.14,
+                      } as const;
+
+                      if (offset === 0) {
+                        return (
+                          <Tilt
+                            key={project.title}
+                            max={8}
+                            className="absolute inset-x-0 top-0 z-10"
+                          >
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setActiveIndex(
+                                  (activeIndex + 1) % filteredProjects.length,
+                                )
+                              }
+                              aria-label={`${t(ui.nextProject, locale)} — ${project.title}`}
+                              className="w-full text-left"
+                            >
+                              <AnimatePresence mode="wait">
+                                <motion.div
+                                  key={activeImage}
+                                  initial={reduced ? false : { opacity: 0.45 }}
+                                  animate={{ opacity: 1 }}
+                                  exit={reduced ? undefined : { opacity: 0.45 }}
+                                  transition={{ duration: 0.2 }}
+                                >
+                                  <ProjectCardFace
+                                    project={project}
+                                    imageSrc={activeImage}
+                                    indexLabel={activeIndexLabel}
+                                  />
+                                </motion.div>
+                              </AnimatePresence>
+                            </button>
+                          </Tilt>
+                        );
+                      }
+
+                      return (
+                        <button
+                          key={project.title}
+                          type="button"
+                          onClick={() => setActiveIndex(index)}
+                          aria-label={`${t(ui.openProjectDetail, locale)} ${project.title}`}
+                          className="absolute inset-x-0 top-0 w-full text-left transition-all duration-500 ease-out"
+                          style={stackStyle}
+                        >
+                          <ProjectCardFace
+                            project={project}
+                            indexLabel={String(index + 1).padStart(2, "0")}
+                          />
+                        </button>
+                      );
+                    })}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              <p className="relative mt-8 text-center text-sm text-ink-soft">
+                {t(ui.projectStackHint, locale)}
+              </p>
+
+              {hasGallery && (
+                <div className="relative mx-auto mt-2 max-w-md">
+                  <ProjectGallery
+                    images={gallery}
+                    activeSrc={activeImage}
+                    onSelect={setPreviewSrc}
+                    projectTitle={activeProject.title}
+                  />
+                </div>
+              )}
+            </div>
           </Reveal>
 
           <Reveal delay={0.15}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${filter}-${activeProject.title}`}
-                initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
+                initial={reduced ? false : { opacity: 0, y: 16, filter: "blur(4px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -12, filter: "blur(4px)" }}
+                exit={reduced ? undefined : { opacity: 0, y: -12, filter: "blur(4px)" }}
                 transition={{ duration: 0.28 }}
               >
                 <div className="flex flex-wrap items-center gap-2 text-sm text-ink-soft">
+                  <span className="font-mono text-xs tracking-[0.18em] text-accent">
+                    {activeIndexLabel}
+                  </span>
+                  <span aria-hidden className="text-border">
+                    /
+                  </span>
                   <span>{t(categoryLabel, locale)}</span>
                   <span aria-hidden>•</span>
                   <span>{t(activeProject.period, locale)}</span>
                 </div>
 
-                <h3 className="mt-4 font-display text-3xl text-ink sm:text-4xl">
+                <h3 className="mt-4 font-display text-3xl text-ink sm:text-4xl lg:text-5xl">
                   {activeProject.title}
                 </h3>
-                <p className="mt-2 text-base text-ink-muted">
+                <p className="mt-2 text-base text-ink-muted sm:text-lg">
                   {t(activeProject.subtitle, locale)}
                 </p>
 
-                <div className="mt-4 flex flex-wrap gap-2">
+                <div className="mt-5 flex flex-wrap gap-2">
                   {activeProject.tech.map((tech, i) => (
                     <motion.span
                       key={tech}
-                      initial={{ opacity: 0, y: 6 }}
+                      initial={reduced ? false : { opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.05 + i * 0.03 }}
                       className="rounded-full border border-border px-3 py-1 font-mono text-xs text-ink-muted"
@@ -331,19 +402,20 @@ export default function Projects() {
                   {t(activeProject.description, locale)}
                 </p>
 
-                {activeProject.keyFeatures && activeProject.keyFeatures.length > 0 && (
-                  <ul className="mt-6 space-y-2 text-sm text-ink-muted">
-                    {activeProject.keyFeatures.map((feature) => (
-                      <li key={feature.en} className="flex gap-2">
-                        <span
-                          className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent"
-                          aria-hidden
-                        />
-                        <span>{t(feature, locale)}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                {activeProject.keyFeatures &&
+                  activeProject.keyFeatures.length > 0 && (
+                    <ul className="mt-6 space-y-2.5 text-sm text-ink-muted">
+                      {activeProject.keyFeatures.map((feature) => (
+                        <li key={feature.en} className="flex gap-2.5">
+                          <span
+                            className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent"
+                            aria-hidden
+                          />
+                          <span>{t(feature, locale)}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
 
                 <div className="mt-8 flex flex-wrap gap-3">
                   <ProjectLinks project={activeProject} />
