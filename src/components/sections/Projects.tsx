@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import {
   projectCategories,
   projects,
@@ -12,6 +12,7 @@ import {
 } from "@/lib/content";
 import { t, useLocale } from "@/lib/i18n";
 import Reveal from "../Reveal";
+import Tilt from "../Tilt";
 import { ExternalLinkIcon, GitHubIcon } from "../Icons";
 
 type FilterId = "all" | ProjectCategory;
@@ -39,6 +40,22 @@ function ProjectLinks({ project }: { project: Project }) {
         <GitHubIcon className="h-4 w-4" />
       )}
     </a>
+  );
+}
+
+function ProjectCardFace({ project }: { project: Project }) {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-sm">
+      <div className="relative aspect-[16/10] bg-bg-muted">
+        <Image
+          src={project.image}
+          alt={`${project.title} project screenshot`}
+          fill
+          sizes="(max-width: 1024px) 100vw, 480px"
+          className="object-cover object-top"
+        />
+      </div>
+    </div>
   );
 }
 
@@ -87,59 +104,96 @@ export default function Projects() {
         </Reveal>
 
         <Reveal delay={0.05}>
-          <div className="mt-8 flex flex-wrap gap-3">
-            {filters.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setFilter(item.id)}
-                className={`filter-pill ${
-                  filter === item.id ? "filter-pill-active" : "filter-pill-inactive"
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
+          <LayoutGroup>
+            <div className="mt-8 flex flex-wrap gap-3">
+              {filters.map((item) => {
+                const selected = filter === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setFilter(item.id)}
+                    className={`relative filter-pill ${
+                      selected ? "border-transparent text-bg" : "filter-pill-inactive"
+                    }`}
+                  >
+                    {selected && (
+                      <motion.span
+                        layoutId="project-filter-pill"
+                        className="absolute inset-0 rounded-full bg-ink"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                    <span className="relative z-10">{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </LayoutGroup>
         </Reveal>
 
         <div className="mt-12 grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
           <Reveal delay={0.1}>
-            <div className="relative mx-auto h-[320px] w-full max-w-md sm:h-[380px]">
-              {filteredProjects.map((project, index) => {
-                const offset =
-                  (index - activeIndex + filteredProjects.length) %
-                  filteredProjects.length;
+            <div
+              className="relative mx-auto h-[320px] w-full max-w-md sm:h-[380px]"
+              style={{ perspective: 1100 }}
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={filter}
+                  className="absolute inset-0"
+                  initial={{ opacity: 0, y: 18, rotateX: 8 }}
+                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  exit={{ opacity: 0, y: -14, rotateX: -6 }}
+                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {filteredProjects.map((project, index) => {
+                    const offset =
+                      (index - activeIndex + filteredProjects.length) %
+                      filteredProjects.length;
 
-                if (offset > 2) return null;
+                    if (offset > 2) return null;
 
-                return (
-                  <button
-                    key={project.title}
-                    type="button"
-                    onClick={() => setActiveIndex(index)}
-                    aria-label={`View ${project.title}`}
-                    className="absolute inset-x-0 top-0 transition-all duration-500 ease-out"
-                    style={{
+                    const stackStyle = {
                       zIndex: 10 - offset,
                       transform: `translateY(${offset * 18}px) scale(${1 - offset * 0.04})`,
                       opacity: offset === 0 ? 1 : 0.92 - offset * 0.12,
-                    }}
-                  >
-                    <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-sm">
-                      <div className="relative aspect-[16/10] bg-bg-muted">
-                        <Image
-                          src={project.image}
-                          alt={`${project.title} project screenshot`}
-                          fill
-                          sizes="(max-width: 1024px) 100vw, 480px"
-                          className="object-cover object-top"
-                        />
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
+                    } as const;
+
+                    if (offset === 0) {
+                      return (
+                        <Tilt
+                          key={project.title}
+                          max={9}
+                          className="absolute inset-x-0 top-0 z-10"
+                        >
+                          <button
+                            type="button"
+                            onClick={() => setActiveIndex(index)}
+                            aria-label={`View ${project.title}`}
+                            className="w-full text-left"
+                          >
+                            <ProjectCardFace project={project} />
+                          </button>
+                        </Tilt>
+                      );
+                    }
+
+                    return (
+                      <button
+                        key={project.title}
+                        type="button"
+                        onClick={() => setActiveIndex(index)}
+                        aria-label={`View ${project.title}`}
+                        className="absolute inset-x-0 top-0 w-full text-left transition-all duration-500 ease-out"
+                        style={stackStyle}
+                      >
+                        <ProjectCardFace project={project} />
+                      </button>
+                    );
+                  })}
+                </motion.div>
+              </AnimatePresence>
             </div>
             <p className="mt-6 text-center text-sm text-ink-soft">
               {t(ui.projectStackHint, locale)}
@@ -149,11 +203,11 @@ export default function Projects() {
           <Reveal delay={0.15}>
             <AnimatePresence mode="wait">
               <motion.div
-                key={activeProject.title}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.25 }}
+                key={`${filter}-${activeProject.title}`}
+                initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -12, filter: "blur(4px)" }}
+                transition={{ duration: 0.28 }}
               >
                 <div className="flex flex-wrap items-center gap-2 text-sm text-ink-soft">
                   <span>{t(categoryLabel, locale)}</span>
@@ -169,13 +223,16 @@ export default function Projects() {
                 </p>
 
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {activeProject.tech.map((tech) => (
-                    <span
+                  {activeProject.tech.map((tech, i) => (
+                    <motion.span
                       key={tech}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.05 + i * 0.03 }}
                       className="rounded-full border border-border px-3 py-1 font-mono text-xs text-ink-muted"
                     >
                       {tech}
-                    </span>
+                    </motion.span>
                   ))}
                 </div>
 

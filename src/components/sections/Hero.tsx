@@ -1,9 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { profile, ui } from "@/lib/content";
 import { t, useLocale } from "@/lib/i18n";
 import Reveal from "../Reveal";
+import HeroPhoto from "../HeroPhoto";
+import HeroMark3D from "../HeroMark3D";
 import { ExternalLinkIcon } from "../Icons";
 
 export default function Hero() {
@@ -12,7 +13,7 @@ export default function Hero() {
   return (
     <section className="border-b border-border" aria-label="Introduction">
       <div className="section-container py-16 sm:py-20 lg:py-28">
-        <div className="grid items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-16">
+        <div className="grid items-center gap-12 lg:grid-cols-[1fr_auto] lg:gap-20">
           <Reveal>
             <div className="mb-6 flex flex-wrap items-center gap-3">
               <p className="section-label">{t(ui.profileLabel, locale)}</p>
@@ -36,7 +37,7 @@ export default function Hero() {
             <div className="mt-8 flex flex-wrap gap-3">
               <a
                 href="#projects"
-                className="inline-flex items-center gap-2 rounded-full border border-ink bg-ink px-5 py-2.5 text-sm font-medium text-bg transition-colors hover:bg-accent hover:border-accent"
+                className="inline-flex items-center gap-2 rounded-full border border-ink bg-ink px-5 py-2.5 text-sm font-medium text-bg transition-colors hover:border-accent hover:bg-accent"
               >
                 {t(ui.viewProjects, locale)}
               </a>
@@ -61,15 +62,9 @@ export default function Hero() {
           </Reveal>
 
           <Reveal delay={0.1} className="justify-self-center lg:justify-self-end">
-            <div className="relative h-48 w-48 overflow-hidden rounded-2xl border border-border bg-bg-muted shadow-sm sm:h-56 sm:w-56">
-              <Image
-                src={profile.avatarUrl}
-                alt={`Professional headshot of ${profile.name}`}
-                fill
-                priority
-                sizes="(max-width: 640px) 192px, 224px"
-                className="object-cover object-[center_15%]"
-              />
+            <div className="relative" style={{ perspective: 1200 }}>
+              <HeroMark3D />
+              <HeroPhoto />
             </div>
           </Reveal>
         </div>
