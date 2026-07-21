@@ -1,40 +1,63 @@
 "use client";
 
-import { about, aboutHeadline } from "@/lib/content";
+import { motion, useReducedMotion } from "framer-motion";
+import { about, aboutHeadline, ui } from "@/lib/content";
+import { t, useLocale } from "@/lib/i18n";
 import Reveal from "../Reveal";
 
 function AboutHeadline() {
+  const { locale } = useLocale();
+  const reduced = useReducedMotion();
+
   return (
     <div className="space-y-1 sm:space-y-2">
-      {aboutHeadline.map((line) => {
+      {aboutHeadline.map((line, index) => {
+        const text = t(line.text, locale);
+
+        const motionProps = reduced
+          ? {}
+          : {
+              initial: { opacity: 0, y: 18 },
+              whileInView: { opacity: 1, y: 0 },
+              viewport: { once: true, margin: "-40px" },
+              transition: {
+                type: "spring" as const,
+                stiffness: 100,
+                damping: 18,
+                delay: index * 0.07,
+              },
+            };
+
         if (line.style === "italic") {
           return (
-            <p
-              key={line.text}
-              className="text-3xl font-semibold italic text-ink-soft sm:text-4xl lg:text-5xl lg:leading-tight"
+            <motion.p
+              key={line.text.en}
+              {...motionProps}
+              className="font-display text-3xl italic leading-[1.15] text-ink-soft sm:text-4xl lg:text-5xl"
             >
-              {line.text}
-            </p>
+              {text}
+            </motion.p>
           );
         }
 
         if (line.style === "pill") {
           return (
-            <p key={line.text} className="pt-1">
-              <span className="inline-block rounded-full bg-bg-muted px-4 py-1 text-3xl font-semibold text-ink sm:text-4xl lg:text-5xl">
-                {line.text}
+            <motion.p key={line.text.en} {...motionProps} className="pt-2">
+              <span className="inline-block rounded-full border border-accent/20 bg-accent px-5 py-1.5 font-display text-3xl leading-none text-bg sm:text-4xl lg:text-5xl">
+                {text}
               </span>
-            </p>
+            </motion.p>
           );
         }
 
         return (
-          <p
-            key={line.text}
-            className="text-3xl font-semibold text-ink sm:text-4xl lg:text-5xl lg:leading-tight"
+          <motion.p
+            key={line.text.en}
+            {...motionProps}
+            className="font-display text-3xl leading-[1.15] text-ink sm:text-4xl lg:text-5xl"
           >
-            {line.text}
-          </p>
+            {text}
+          </motion.p>
         );
       })}
     </div>
@@ -42,29 +65,47 @@ function AboutHeadline() {
 }
 
 export default function About() {
+  const { locale } = useLocale();
+
   return (
-    <section id="about" className="scroll-mt-24 border-b border-border" aria-label="About me">
-      <div className="section-container grid gap-12 py-16 sm:py-20 lg:grid-cols-2 lg:items-start lg:gap-16 lg:py-28">
+    <section
+      id="about"
+      className="relative scroll-mt-24 overflow-hidden border-b border-border"
+      aria-label={t(ui.aboutLabel, locale)}
+    >
+      <div
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_circle_at_0%_0%,rgb(var(--color-accent)/0.07),transparent_55%),radial-gradient(700px_circle_at_100%_80%,rgb(var(--color-accent)/0.05),transparent_50%)]"
+        aria-hidden
+      />
+
+      <div className="section-container relative py-16 sm:py-20 lg:py-28">
         <Reveal>
-          <AboutHeadline />
+          <p className="section-label mb-8">{t(ui.aboutLabel, locale)}</p>
         </Reveal>
 
-        <div className="space-y-6 text-base leading-relaxed text-ink-muted sm:text-lg">
-          {about.map((paragraph, index) => (
-            <Reveal key={index} delay={index * 0.05}>
-              <p>
-                {paragraph.map((segment, segmentIndex) =>
-                  segment.bold ? (
-                    <strong key={segmentIndex} className="font-semibold text-ink">
-                      {segment.text}
-                    </strong>
-                  ) : (
-                    <span key={segmentIndex}>{segment.text}</span>
-                  ),
-                )}
-              </p>
-            </Reveal>
-          ))}
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-start lg:gap-16 xl:gap-20">
+          <AboutHeadline />
+
+          <div className="space-y-6 text-base leading-relaxed text-ink-muted sm:text-lg">
+            {about.map((paragraph, index) => (
+              <Reveal key={index} delay={0.08 + index * 0.06}>
+                <p>
+                  {paragraph.map((segment, segmentIndex) =>
+                    segment.bold ? (
+                      <strong
+                        key={segmentIndex}
+                        className="font-semibold text-ink"
+                      >
+                        {t(segment.text, locale)}
+                      </strong>
+                    ) : (
+                      <span key={segmentIndex}>{t(segment.text, locale)}</span>
+                    ),
+                  )}
+                </p>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </div>
     </section>

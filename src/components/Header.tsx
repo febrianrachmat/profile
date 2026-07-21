@@ -5,11 +5,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { navItems, profile } from "@/lib/content";
+import { t, useLocale } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import { MoonIcon, SunIcon } from "./Icons";
 
 export default function Header() {
   const { theme, toggle: toggleTheme } = useTheme();
+  const { locale, toggleLocale } = useLocale();
   const [active, setActive] = useState("about");
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -49,7 +51,7 @@ export default function Header() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex" aria-label="Main navigation">
+        <nav className="hidden items-center gap-6 lg:flex lg:gap-8" aria-label="Main navigation">
           {navItems.map((item) => (
             <a
               key={item.id}
@@ -58,13 +60,20 @@ export default function Header() {
                 active === item.id ? "text-ink" : "text-ink-soft hover:text-ink"
               }`}
             >
-              {item.label}
+              {t(item.label, locale)}
             </a>
           ))}
           <button
+            onClick={toggleLocale}
+            className="rounded-full border border-border px-3 py-1.5 font-mono text-xs text-ink-muted transition-colors hover:border-ink hover:text-ink"
+            aria-label={t({ en: "Toggle language", id: "Ganti bahasa" }, locale)}
+          >
+            {locale === "en" ? "ID" : "EN"}
+          </button>
+          <button
             onClick={toggleTheme}
             className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-ink-muted transition-colors hover:border-ink hover:text-ink"
-            aria-label="Toggle theme"
+            aria-label={t({ en: "Toggle theme", id: "Ganti tema" }, locale)}
             aria-pressed={theme === "light"}
           >
             <AnimatePresence mode="wait" initial={false}>
@@ -85,20 +94,39 @@ export default function Header() {
           </button>
         </nav>
 
-        <button
-          type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-ink md:hidden"
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          <span className="sr-only">Menu</span>
-          <span className="flex flex-col gap-1.5">
-            <span className={`block h-0.5 w-5 bg-ink transition-transform ${menuOpen ? "translate-y-2 rotate-45" : ""}`} />
-            <span className={`block h-0.5 w-5 bg-ink transition-opacity ${menuOpen ? "opacity-0" : ""}`} />
-            <span className={`block h-0.5 w-5 bg-ink transition-transform ${menuOpen ? "-translate-y-2 -rotate-45" : ""}`} />
-          </span>
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <button
+            onClick={toggleLocale}
+            className="rounded-full border border-border px-2.5 py-1 font-mono text-xs text-ink-muted"
+            aria-label={t({ en: "Toggle language", id: "Ganti bahasa" }, locale)}
+          >
+            {locale === "en" ? "ID" : "EN"}
+          </button>
+          <button
+            type="button"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-ink"
+            aria-label={
+              menuOpen
+                ? t({ en: "Close menu", id: "Tutup menu" }, locale)
+                : t({ en: "Open menu", id: "Buka menu" }, locale)
+            }
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span className="sr-only">{t({ en: "Menu", id: "Menu" }, locale)}</span>
+            <span className="flex flex-col gap-1.5">
+              <span
+                className={`block h-0.5 w-5 bg-ink transition-transform ${menuOpen ? "translate-y-2 rotate-45" : ""}`}
+              />
+              <span
+                className={`block h-0.5 w-5 bg-ink transition-opacity ${menuOpen ? "opacity-0" : ""}`}
+              />
+              <span
+                className={`block h-0.5 w-5 bg-ink transition-transform ${menuOpen ? "-translate-y-2 -rotate-45" : ""}`}
+              />
+            </span>
+          </button>
+        </div>
       </div>
 
       {menuOpen && (
@@ -116,7 +144,7 @@ export default function Header() {
                     active === item.id ? "text-ink" : "text-ink-soft"
                   }`}
                 >
-                  {item.label}
+                  {t(item.label, locale)}
                 </a>
               </li>
             ))}
@@ -125,7 +153,11 @@ export default function Header() {
                 onClick={toggleTheme}
                 className="py-1 text-sm text-ink-soft"
               >
-                Switch to {theme === "dark" ? "light" : "dark"} mode
+                {locale === "en"
+                  ? `Switch to ${theme === "dark" ? "light" : "dark"} mode`
+                  : theme === "dark"
+                    ? "Mode terang"
+                    : "Mode gelap"}
               </button>
             </li>
           </ul>

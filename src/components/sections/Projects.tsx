@@ -6,24 +6,20 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   projectCategories,
   projects,
+  ui,
   type Project,
   type ProjectCategory,
 } from "@/lib/content";
+import { t, useLocale } from "@/lib/i18n";
 import Reveal from "../Reveal";
 import { ExternalLinkIcon, GitHubIcon } from "../Icons";
 
 type FilterId = "all" | ProjectCategory;
 
-const filters: { id: FilterId; label: string }[] = [
-  { id: "all", label: "Show All" },
-  ...projectCategories.map((category) => ({
-    id: category.id,
-    label: category.label,
-  })),
-];
-
 function ProjectLinks({ project }: { project: Project }) {
-  const primaryLink = project.link ?? project.repo ?? project.repos?.[0]?.url ?? project.apiLink;
+  const { locale } = useLocale();
+  const primaryLink =
+    project.link ?? project.repo ?? project.repos?.[0]?.url ?? project.apiLink;
 
   if (!primaryLink) return null;
 
@@ -34,9 +30,9 @@ function ProjectLinks({ project }: { project: Project }) {
       href={primaryLink}
       target="_blank"
       rel="noreferrer"
-      className="inline-flex items-center gap-2 rounded-full border border-ink bg-ink px-5 py-2.5 text-sm font-medium text-bg transition-colors hover:bg-accent hover:border-accent"
+      className="inline-flex items-center gap-2 rounded-full border border-ink bg-ink px-5 py-2.5 text-sm font-medium text-bg transition-colors hover:border-accent hover:bg-accent"
     >
-      View Project
+      {t(ui.viewProject, locale)}
       {isExternal ? (
         <ExternalLinkIcon className="h-4 w-4" />
       ) : (
@@ -47,8 +43,17 @@ function ProjectLinks({ project }: { project: Project }) {
 }
 
 export default function Projects() {
+  const { locale } = useLocale();
   const [filter, setFilter] = useState<FilterId>("all");
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const filters: { id: FilterId; label: string }[] = [
+    { id: "all", label: t(ui.showAll, locale) },
+    ...projectCategories.map((category) => ({
+      id: category.id,
+      label: t(category.label, locale),
+    })),
+  ];
 
   const filteredProjects = useMemo(
     () =>
@@ -67,14 +72,18 @@ export default function Projects() {
   if (!activeProject) return null;
 
   const categoryLabel =
-    projectCategories.find((category) => category.id === activeProject.category)?.label ??
-    activeProject.category;
+    projectCategories.find((category) => category.id === activeProject.category)
+      ?.label ?? { en: activeProject.category, id: activeProject.category };
 
   return (
-    <section id="projects" className="scroll-mt-24 border-b border-border py-16 sm:py-20 lg:py-24" aria-label="Projects">
+    <section
+      id="projects"
+      className="scroll-mt-24 border-b border-border py-16 sm:py-20 lg:py-24"
+      aria-label={t(ui.curatedProjects, locale)}
+    >
       <div className="section-container">
         <Reveal>
-          <h2 className="section-title">Curated Projects</h2>
+          <h2 className="section-title">{t(ui.curatedProjects, locale)}</h2>
         </Reveal>
 
         <Reveal delay={0.05}>
@@ -133,7 +142,7 @@ export default function Projects() {
               })}
             </div>
             <p className="mt-6 text-center text-sm text-ink-soft">
-              * Click on stacked cards above to see other projects
+              {t(ui.projectStackHint, locale)}
             </p>
           </Reveal>
 
@@ -147,15 +156,17 @@ export default function Projects() {
                 transition={{ duration: 0.25 }}
               >
                 <div className="flex flex-wrap items-center gap-2 text-sm text-ink-soft">
-                  <span>{categoryLabel}</span>
+                  <span>{t(categoryLabel, locale)}</span>
                   <span aria-hidden>•</span>
-                  <span>{activeProject.period}</span>
+                  <span>{t(activeProject.period, locale)}</span>
                 </div>
 
                 <h3 className="mt-4 font-display text-3xl text-ink sm:text-4xl">
                   {activeProject.title}
                 </h3>
-                <p className="mt-2 text-base text-ink-muted">{activeProject.subtitle}</p>
+                <p className="mt-2 text-base text-ink-muted">
+                  {t(activeProject.subtitle, locale)}
+                </p>
 
                 <div className="mt-4 flex flex-wrap gap-2">
                   {activeProject.tech.map((tech) => (
@@ -169,15 +180,18 @@ export default function Projects() {
                 </div>
 
                 <p className="mt-6 text-base leading-relaxed text-ink-muted">
-                  {activeProject.description}
+                  {t(activeProject.description, locale)}
                 </p>
 
                 {activeProject.keyFeatures && activeProject.keyFeatures.length > 0 && (
                   <ul className="mt-6 space-y-2 text-sm text-ink-muted">
                     {activeProject.keyFeatures.map((feature) => (
-                      <li key={feature} className="flex gap-2">
-                        <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" aria-hidden />
-                        <span>{feature}</span>
+                      <li key={feature.en} className="flex gap-2">
+                        <span
+                          className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent"
+                          aria-hidden
+                        />
+                        <span>{t(feature, locale)}</span>
                       </li>
                     ))}
                   </ul>
@@ -194,7 +208,7 @@ export default function Projects() {
                       className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm text-ink-muted transition-colors hover:border-ink hover:text-ink"
                     >
                       <GitHubIcon className="h-4 w-4" />
-                      {repo.label}
+                      {t(repo.label, locale)}
                     </a>
                   ))}
                   {activeProject.repo && !activeProject.repos?.length && (
@@ -205,7 +219,7 @@ export default function Projects() {
                       className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm text-ink-muted transition-colors hover:border-ink hover:text-ink"
                     >
                       <GitHubIcon className="h-4 w-4" />
-                      Code
+                      {t(ui.code, locale)}
                     </a>
                   )}
                   {activeProject.apiLink && (
@@ -216,7 +230,7 @@ export default function Projects() {
                       className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm text-ink-muted transition-colors hover:border-ink hover:text-ink"
                     >
                       <ExternalLinkIcon className="h-4 w-4" />
-                      API Docs
+                      {t(ui.apiDocs, locale)}
                     </a>
                   )}
                 </div>

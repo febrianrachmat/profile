@@ -63,3 +63,27 @@ export const FolderIcon = ({ className }: IconProps) => (
     <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z" />
   </svg>
 );
+
+export const BriefcaseIcon = ({ className }: IconProps) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <rect x="2" y="7" width="20" height="14" rx="2" />
+    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+    <path d="M2 13h20" />
+  </svg>
+);
+
+export const GraduationIcon = ({ className }: IconProps) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="M22 10 12 5 2 10l10 5 10-5Z" />
+    <path d="M6 12v5c0 .7 2.7 2 6 2s6-1.3 6-2v-5" />
+    <path d="M22 10v6" />
+  </svg>
+);
+
+export const CertificateIcon = ({ className }: IconProps) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <rect x="3" y="3" width="18" height="14" rx="2" />
+    <path d="M8 8h8M8 12h5" />
+    <path d="m9 17 3 4 3-4" />
+  </svg>
+);

@@ -42,7 +42,7 @@ export default function Loader() {
     <AnimatePresence>
       {!done && (
         <motion.div
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-navy"
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-bg"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.5 } }}
         >
@@ -60,13 +60,13 @@ export default function Loader() {
               className="h-40 w-auto drop-shadow-2xl sm:h-45"
             />
           </motion.div>
-          <div className="mt-8 h-px w-48 overflow-hidden bg-navy-lighter">
+          <div className="mt-8 h-px w-48 overflow-hidden bg-border">
             <motion.div
               className="h-full bg-accent"
               style={{ width: `${count}%` }}
             />
           </div>
-          <p className="mt-3 font-mono text-sm text-slate">{count}%</p>
+          <p className="mt-3 font-mono text-sm text-ink-soft">{count}%</p>
         </motion.div>
       )}
     </AnimatePresence>

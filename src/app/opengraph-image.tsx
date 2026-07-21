@@ -5,7 +5,7 @@ import { profile } from "@/lib/content";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = `${profile.name} · ${profile.role}`;
+export const alt = `${profile.name} · Full Stack Software Engineer`;
 
 export default function OpengraphImage() {
   const logo = readFileSync(join(process.cwd(), "public", "logo-rf.png"));
@@ -22,37 +22,38 @@ export default function OpengraphImage() {
           justifyContent: "center",
           padding: "80px",
           background:
-            "radial-gradient(900px circle at 20% 0%, #112240, #0a192f 60%)",
-          color: "#ccd6f6",
+            "linear-gradient(135deg, rgb(250, 249, 246) 0%, rgb(244, 242, 237) 50%, rgb(229, 229, 224) 100%)",
+          color: "rgb(26, 26, 26)",
           fontFamily: "sans-serif",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={logoSrc}
-          width={240}
-          height={160}
+          width={200}
+          height={133}
           style={{ objectFit: "contain", marginBottom: 36 }}
           alt=""
         />
         <div style={{ fontSize: 72, fontWeight: 700, lineHeight: 1.1 }}>
           {profile.name}
         </div>
-        <div style={{ fontSize: 36, color: "#64ffda", marginTop: 12 }}>
-          {profile.role}
+        <div style={{ fontSize: 36, color: "rgb(17, 94, 89)", marginTop: 12 }}>
+          Full Stack Software Engineer
         </div>
         <div
           style={{
             fontSize: 28,
-            color: "#8892b0",
+            color: "rgb(82, 82, 82)",
             marginTop: 24,
             maxWidth: 900,
+            lineHeight: 1.4,
           }}
         >
-          {profile.tagline}
+          {profile.tagline.en}
         </div>
       </div>
     ),
-    { ...size }
+    { ...size },
   );
 }

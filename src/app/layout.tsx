@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Serif_Display, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/lib/theme";
+import { LocaleProvider } from "@/lib/i18n";
 import { profile } from "@/lib/content";
 
 const inter = Inter({
@@ -30,14 +31,15 @@ const siteUrl =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: `${profile.name} · ${profile.role}`,
-  description: profile.tagline,
+  title: `${profile.name} · Full Stack Software Engineer`,
+  description: profile.tagline.en,
   keywords: [
     "Full Stack Developer",
     "Software Engineer",
     "Web Developer",
     "React",
     "Next.js",
+    "NestJS",
     profile.name,
   ],
   authors: [{ name: profile.name }],
@@ -45,20 +47,52 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   robots: { index: true, follow: true },
   openGraph: {
-    title: `${profile.name} · ${profile.role}`,
-    description: profile.tagline,
+    title: `${profile.name} · Full Stack Software Engineer`,
+    description: profile.tagline.en,
     url: "/",
     siteName: profile.name,
     type: "website",
+    locale: "en_US",
+    alternateLocale: "id_ID",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${profile.name} · ${profile.role}`,
-    description: profile.tagline,
+    title: `${profile.name} · Full Stack Software Engineer`,
+    description: profile.tagline.en,
   },
 };
 
-const initScript = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t='light';}document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme='light';}})();`;
+const themeInitScript = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t='light';}document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme='light';}})();`;
+
+const localeInitScript = `(function(){try{var l=localStorage.getItem('locale');if(l!=='en'&&l!=='id'){l='en';}document.documentElement.lang=l;}catch(e){document.documentElement.lang='en';}})();`;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: profile.name,
+  jobTitle: "Full Stack Software Engineer",
+  email: profile.email,
+  url: siteUrl,
+  image: `${siteUrl}${profile.avatarUrl}`,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Surabaya",
+    addressCountry: "ID",
+  },
+  sameAs: [
+    profile.socials.github,
+    profile.socials.linkedin,
+    profile.socials.instagram,
+  ].filter(Boolean),
+  knowsAbout: [
+    "Next.js",
+    "React",
+    "NestJS",
+    "TypeScript",
+    "PostgreSQL",
+    "Prisma",
+  ],
+};
 
 export default function RootLayout({
   children,
@@ -71,10 +105,17 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: initScript }} />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: localeInitScript }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body className="font-sans">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <LocaleProvider>{children}</LocaleProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
