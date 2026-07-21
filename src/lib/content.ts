@@ -16,6 +16,8 @@ export type Project = {
   tech: string[];
   category: ProjectCategory;
   image: string;
+  /** Extra screenshots shown as a gallery under the active project */
+  images?: string[];
   link?: string;
   repo?: string;
   repos?: ProjectRepo[];
@@ -111,6 +113,10 @@ export const ui = {
   projectStackHint: {
     en: "* Click on stacked cards above to see other projects",
     id: "* Klik kartu di atas untuk melihat proyek lainnya",
+  },
+  projectScreenshots: {
+    en: "Screenshots",
+    id: "Screenshot",
   },
   craftTitle: { en: "Craft & Technology", id: "Keahlian & Teknologi" },
   experienceTitle: { en: "Experience & Education", id: "Pengalaman & Pendidikan" },
@@ -369,6 +375,16 @@ export const projects: Project[] = [
     tech: ["Next.js", "NestJS", "Prisma", "PostgreSQL", "JWT", "SSE"],
     category: "fullstack",
     image: "/projects/kinova.png",
+    images: [
+      "/projects/kinova.png",
+      "/projects/kinova-services.png",
+      "/projects/kinova-about.png",
+      "/projects/kinova-patient-therapists.png",
+      "/projects/kinova-patient-appointment.png",
+      "/projects/kinova-patient-chat.png",
+      "/projects/kinova-admin-dashboard.png",
+      "/projects/kinova-admin-analytics.png",
+    ],
     link: "https://kinova-zeta.vercel.app/",
     repos: [
       {

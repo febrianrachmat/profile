@@ -43,12 +43,18 @@ function ProjectLinks({ project }: { project: Project }) {
   );
 }
 
-function ProjectCardFace({ project }: { project: Project }) {
+function ProjectCardFace({
+  project,
+  imageSrc,
+}: {
+  project: Project;
+  imageSrc?: string;
+}) {
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-sm">
       <div className="relative aspect-[16/10] bg-bg-muted">
         <Image
-          src={project.image}
+          src={imageSrc ?? project.image}
           alt={`${project.title} project screenshot`}
           fill
           sizes="(max-width: 1024px) 100vw, 480px"
@@ -59,10 +65,60 @@ function ProjectCardFace({ project }: { project: Project }) {
   );
 }
 
+function ProjectGallery({
+  images,
+  activeSrc,
+  onSelect,
+  projectTitle,
+}: {
+  images: string[];
+  activeSrc: string;
+  onSelect: (src: string) => void;
+  projectTitle: string;
+}) {
+  const { locale } = useLocale();
+
+  return (
+    <div className="mt-6">
+      <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-soft">
+        {t(ui.projectScreenshots, locale)}
+      </p>
+      <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+        {images.map((src, index) => {
+          const selected = src === activeSrc;
+          return (
+            <button
+              key={src}
+              type="button"
+              onClick={() => onSelect(src)}
+              aria-label={`${projectTitle} screenshot ${index + 1}`}
+              aria-pressed={selected}
+              className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-lg border transition ${
+                selected
+                  ? "border-ink ring-2 ring-ink/20"
+                  : "border-border opacity-80 hover:opacity-100"
+              }`}
+            >
+              <Image
+                src={src}
+                alt=""
+                fill
+                sizes="96px"
+                className="object-cover object-top"
+              />
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export default function Projects() {
   const { locale } = useLocale();
   const [filter, setFilter] = useState<FilterId>("all");
   const [activeIndex, setActiveIndex] = useState(0);
+  const [previewSrc, setPreviewSrc] = useState<string | null>(null);
 
   const filters: { id: FilterId; label: string }[] = [
     { id: "all", label: t(ui.showAll, locale) },
@@ -82,11 +138,21 @@ export default function Projects() {
 
   useEffect(() => {
     setActiveIndex(0);
+    setPreviewSrc(null);
   }, [filter]);
 
   const activeProject = filteredProjects[activeIndex] ?? filteredProjects[0];
 
+  useEffect(() => {
+    setPreviewSrc(null);
+  }, [activeProject?.title]);
+
   if (!activeProject) return null;
+
+  const gallery = activeProject.images?.length
+    ? activeProject.images
+    : [activeProject.image];
+  const activeImage = previewSrc ?? activeProject.image;
 
   const categoryLabel =
     projectCategories.find((category) => category.id === activeProject.category)
@@ -173,7 +239,24 @@ export default function Projects() {
                             aria-label={`View ${project.title}`}
                             className="w-full text-left"
                           >
-                            <ProjectCardFace project={project} />
+                            <AnimatePresence mode="wait">
+                              <motion.div
+                                key={activeImage}
+                                initial={{ opacity: 0.4 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0.4 }}
+                                transition={{ duration: 0.2 }}
+                              >
+                                <ProjectCardFace
+                                  project={project}
+                                  imageSrc={
+                                    project.title === activeProject.title
+                                      ? activeImage
+                                      : project.image
+                                  }
+                                />
+                              </motion.div>
+                            </AnimatePresence>
                           </button>
                         </Tilt>
                       );
@@ -198,6 +281,14 @@ export default function Projects() {
             <p className="mt-6 text-center text-sm text-ink-soft">
               {t(ui.projectStackHint, locale)}
             </p>
+            {gallery.length > 1 && (
+              <ProjectGallery
+                images={gallery}
+                activeSrc={activeImage}
+                onSelect={setPreviewSrc}
+                projectTitle={activeProject.title}
+              />
+            )}
           </Reveal>
 
           <Reveal delay={0.15}>

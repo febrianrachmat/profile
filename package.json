@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "screenshots": "node scripts/capture-project-screenshots.mjs"
+    "screenshots": "node scripts/capture-project-screenshots.mjs",
+    "screenshots:kinova": "node scripts/capture-kinova-screenshots.mjs"
   },
   "dependencies": {
     "eslint-config-next": "^16.2.6",
