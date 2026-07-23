@@ -364,6 +364,60 @@ export const timeline: TimelineItem[] = [
 
 export const projects: Project[] = [
   {
+    title: "FlowPilot",
+    subtitle: {
+      en: "Collaborative Project Management SaaS",
+      id: "SaaS Manajemen Proyek Kolaboratif",
+    },
+    period: { en: "Full-Stack · 2026", id: "Full-Stack · 2026" },
+    description: {
+      en: "Production-ready project management SaaS with live Kanban boards, threaded comments, file sharing, workspace invites, and activity timelines — so teams ship with a shared pulse instead of scattered chat threads.",
+      id: "SaaS manajemen proyek production-ready dengan Kanban board real-time, komentar berantai, berbagi file, undangan workspace, dan timeline aktivitas — agar tim deliver dengan satu sumber kebenaran, bukan chat yang tercerai.",
+    },
+    keyFeatures: [
+      {
+        en: "Live Kanban boards with Backlog → Doing → Done sync across the team",
+        id: "Kanban board live dengan sync Backlog → Doing → Done antar anggota tim",
+      },
+      {
+        en: "Workspace collaboration: comments, files, invites, and activity timeline",
+        id: "Kolaborasi workspace: komentar, file, undangan, dan timeline aktivitas",
+      },
+      {
+        en: "JWT + refresh token rotation with NestJS Clean Architecture and Prisma",
+        id: "JWT + refresh token rotation dengan Clean Architecture NestJS dan Prisma",
+      },
+    ],
+    tech: [
+      "Next.js",
+      "NestJS",
+      "Prisma",
+      "PostgreSQL",
+      "TanStack Query",
+      "Zustand",
+    ],
+    category: "fullstack",
+    image: "/projects/flowpilot.png",
+    images: [
+      "/projects/flowpilot.png",
+      "/projects/flowpilot-boards.png",
+      "/projects/flowpilot-cta.png",
+      "/projects/flowpilot-login.png",
+      "/projects/flowpilot-register.png",
+    ],
+    link: "https://flowpilot-drab.vercel.app/",
+    repos: [
+      {
+        label: { en: "Frontend", id: "Frontend" },
+        url: "https://github.com/febrianrachmat/FE-SaaS-Project",
+      },
+      {
+        label: { en: "Backend", id: "Backend" },
+        url: "https://github.com/febrianrachmat/BE-SaaS-Project",
+      },
+    ],
+  },
+  {
     title: "Kinova",
     subtitle: {
       en: "Physiotherapy Booking Platform",
