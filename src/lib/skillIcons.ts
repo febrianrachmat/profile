@@ -11,6 +11,12 @@ const skillIconSlugs: Record<string, string> = {
   Docker: "docker",
   Python: "python",
   "Framer Motion": "framer",
+  Neon: "neon",
+  Sentry: "sentry",
+};
+
+const skillIconUrls: Record<string, string> = {
+  OpsCtrl: "/skills/opsctrl.png",
 };
 
 export function getSkillIconSlug(name: string) {
@@ -18,6 +24,7 @@ export function getSkillIconSlug(name: string) {
 }
 
 export function getSkillIconUrl(name: string) {
+  if (skillIconUrls[name]) return skillIconUrls[name];
   const slug = getSkillIconSlug(name);
   return `https://cdn.simpleicons.org/${slug}`;
 }

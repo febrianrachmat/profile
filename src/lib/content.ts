@@ -278,6 +278,9 @@ export const skillTiers: SkillTier[] = [
       "Docker",
       "Python",
       "Framer Motion",
+      "Neon",
+      "OpsCtrl",
+      "Sentry",
     ],
   },
 ];
