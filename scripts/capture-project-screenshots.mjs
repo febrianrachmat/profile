@@ -7,6 +7,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const outputDir = path.join(__dirname, "..", "public", "projects");
 
 const targets = [
+  { slug: "setpoint", url: "https://setpoint-five.vercel.app/" },
+  {
+    slug: "setpoint-tournaments",
+    url: "https://setpoint-five.vercel.app/tournaments",
+  },
+  { slug: "setpoint-login", url: "https://setpoint-five.vercel.app/login" },
   { slug: "flowpilot", url: "https://flowpilot-drab.vercel.app/" },
   {
     slug: "flowpilot-boards",

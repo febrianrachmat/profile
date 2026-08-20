@@ -367,6 +367,58 @@ export const timeline: TimelineItem[] = [
 
 export const projects: Project[] = [
   {
+    title: "Set Point",
+    subtitle: {
+      en: "Padel Tournament Platform",
+      id: "Platform Turnamen Padel",
+    },
+    period: { en: "Full-Stack · 2026", id: "Full-Stack · 2026" },
+    description: {
+      en: "Production-grade SaaS for padel tournament operations — organizers run events from registration through drawing, scheduling, live scoring, standings, and playoffs to champion declaration, while guests follow the action without an account.",
+      id: "SaaS production-grade untuk operasional turnamen padel — organizer menjalankan event dari registrasi hingga drawing, jadwal, live scoring, klasemen, dan playoff sampai juara diumumkan, sementara penonton mengikuti tanpa akun.",
+    },
+    keyFeatures: [
+      {
+        en: "Organizer MVP: tournaments, categories, teams, courts, and full lifecycle",
+        id: "Organizer MVP: turnamen, kategori, tim, lapangan, dan lifecycle lengkap",
+      },
+      {
+        en: "Domain engines for drawing, schedule, scoring, standings, and playoff brackets",
+        id: "Domain engine untuk drawing, jadwal, scoring, klasemen, dan bracket playoff",
+      },
+      {
+        en: "Referee desk for live scoring plus public spectator tournament views",
+        id: "Meja wasit untuk live scoring plus tampilan turnamen publik untuk penonton",
+      },
+    ],
+    tech: [
+      "Next.js",
+      "NestJS",
+      "Prisma",
+      "PostgreSQL",
+      "TanStack Query",
+      "Zod",
+    ],
+    category: "fullstack",
+    image: "/projects/setpoint.png",
+    images: [
+      "/projects/setpoint.png",
+      "/projects/setpoint-tournaments.png",
+      "/projects/setpoint-login.png",
+    ],
+    link: "https://setpoint-five.vercel.app/",
+    repos: [
+      {
+        label: { en: "Frontend", id: "Frontend" },
+        url: "https://github.com/febrianrachmat/FE-SetPoint",
+      },
+      {
+        label: { en: "Backend", id: "Backend" },
+        url: "https://github.com/febrianrachmat/BE-SetPoint",
+      },
+    ],
+  },
+  {
     title: "FlowPilot",
     subtitle: {
       en: "Collaborative Project Management SaaS",
