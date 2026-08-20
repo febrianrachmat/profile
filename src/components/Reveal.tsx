@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
+import { revealHidden, revealTransition } from "@/lib/motion";
 
 export default function Reveal({
   children,
@@ -21,16 +22,10 @@ export default function Reveal({
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 28 }}
+      initial={revealHidden}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
-      transition={{
-        type: "spring",
-        stiffness: 90,
-        damping: 18,
-        mass: 0.8,
-        delay,
-      }}
+      transition={revealTransition(delay)}
     >
       {children}
     </motion.div>

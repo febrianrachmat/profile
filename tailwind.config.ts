@@ -27,9 +27,41 @@ const config: Config = {
         marquee: "rgb(var(--color-marquee) / <alpha-value>)",
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
         display: ["var(--font-display)", "Georgia", "serif"],
+      },
+      fontSize: {
+        display: [
+          "clamp(3.25rem, 8vw, 5.75rem)",
+          { lineHeight: "0.98", letterSpacing: "-0.035em" },
+        ],
+        "display-md": [
+          "clamp(2rem, 4.2vw, 3.25rem)",
+          { lineHeight: "1.08", letterSpacing: "-0.03em" },
+        ],
+        "display-sm": [
+          "clamp(1.5rem, 2.6vw, 2.25rem)",
+          { lineHeight: "1.15", letterSpacing: "-0.02em" },
+        ],
+      },
+      spacing: {
+        18: "4.5rem",
+        22: "5.5rem",
+        section: "7rem",
+      },
+      borderRadius: {
+        card: "1.25rem",
+        "4xl": "2rem",
+      },
+      transitionDuration: {
+        250: "250ms",
+      },
+      transitionTimingFunction: {
+        out: "cubic-bezier(0.22, 1, 0.36, 1)",
+      },
+      maxWidth: {
+        content: "72rem",
       },
       keyframes: {
         fadeUp: {
@@ -38,7 +70,7 @@ const config: Config = {
         },
       },
       animation: {
-        fadeUp: "fadeUp 0.6s ease forwards",
+        fadeUp: "fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards",
       },
     },
   },

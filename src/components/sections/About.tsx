@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { about, aboutHeadline, ui } from "@/lib/content";
 import { t, useLocale } from "@/lib/i18n";
+import { revealHidden, revealTransition } from "@/lib/motion";
 import Reveal from "../Reveal";
 
 function AboutHeadline() {
@@ -17,15 +18,10 @@ function AboutHeadline() {
         const motionProps = reduced
           ? {}
           : {
-              initial: { opacity: 0, y: 18 },
+              initial: revealHidden,
               whileInView: { opacity: 1, y: 0 },
               viewport: { once: true, margin: "-40px" },
-              transition: {
-                type: "spring" as const,
-                stiffness: 100,
-                damping: 18,
-                delay: index * 0.07,
-              },
+              transition: revealTransition(index * 0.07),
             };
 
         if (line.style === "italic") {
@@ -33,7 +29,7 @@ function AboutHeadline() {
             <motion.p
               key={line.text.en}
               {...motionProps}
-              className="font-display text-3xl italic leading-[1.15] text-ink-soft sm:text-4xl lg:text-5xl"
+              className="font-display text-display-md italic leading-[1.12] text-ink-soft"
             >
               {text}
             </motion.p>
@@ -43,7 +39,7 @@ function AboutHeadline() {
         if (line.style === "pill") {
           return (
             <motion.p key={line.text.en} {...motionProps} className="pt-2">
-              <span className="inline-block rounded-full border border-accent/20 bg-accent px-5 py-1.5 font-display text-3xl leading-none text-bg sm:text-4xl lg:text-5xl">
+              <span className="inline-block rounded-full bg-accent px-5 py-1.5 font-display text-display-md leading-none text-bg">
                 {text}
               </span>
             </motion.p>
@@ -54,7 +50,7 @@ function AboutHeadline() {
           <motion.p
             key={line.text.en}
             {...motionProps}
-            className="font-display text-3xl leading-[1.15] text-ink sm:text-4xl lg:text-5xl"
+            className="font-display text-display-md leading-[1.12] text-ink"
           >
             {text}
           </motion.p>
@@ -78,7 +74,7 @@ export default function About() {
         aria-hidden
       />
 
-      <div className="section-container relative py-16 sm:py-20 lg:py-28">
+      <div className="section-container relative section-y">
         <Reveal>
           <p className="section-label mb-8">{t(ui.aboutLabel, locale)}</p>
         </Reveal>
@@ -94,7 +90,7 @@ export default function About() {
                     segment.bold ? (
                       <strong
                         key={segmentIndex}
-                        className="font-semibold text-ink"
+                        className="font-medium text-accent"
                       >
                         {t(segment.text, locale)}
                       </strong>

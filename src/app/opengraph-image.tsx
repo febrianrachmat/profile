@@ -22,8 +22,8 @@ export default function OpengraphImage() {
           justifyContent: "center",
           padding: "80px",
           background:
-            "linear-gradient(135deg, rgb(250, 249, 246) 0%, rgb(244, 242, 237) 50%, rgb(229, 229, 224) 100%)",
-          color: "rgb(26, 26, 26)",
+            "linear-gradient(135deg, rgb(12, 12, 11) 0%, rgb(22, 21, 19) 55%, rgb(28, 22, 20) 100%)",
+          color: "rgb(242, 237, 228)",
           fontFamily: "sans-serif",
         }}
       >
@@ -38,13 +38,13 @@ export default function OpengraphImage() {
         <div style={{ fontSize: 72, fontWeight: 700, lineHeight: 1.1 }}>
           {profile.name}
         </div>
-        <div style={{ fontSize: 36, color: "rgb(17, 94, 89)", marginTop: 12 }}>
+        <div style={{ fontSize: 36, color: "rgb(232, 122, 98)", marginTop: 12 }}>
           Full Stack Software Engineer
         </div>
         <div
           style={{
             fontSize: 28,
-            color: "rgb(82, 82, 82)",
+            color: "rgb(163, 157, 147)",
             marginTop: 24,
             maxWidth: 900,
             lineHeight: 1.4,

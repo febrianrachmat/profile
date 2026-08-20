@@ -36,7 +36,7 @@ export default function Home() {
         <Projects />
         <Contact />
         <footer className="border-t border-border py-8">
-          <div className="section-container text-center font-mono text-xs text-ink-soft">
+          <div className="section-container text-center font-mono text-xs tracking-wider text-ink-soft">
             <p>
               © {new Date().getFullYear()} {profile.name}.
             </p>

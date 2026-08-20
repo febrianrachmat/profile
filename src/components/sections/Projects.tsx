@@ -36,13 +36,13 @@ function ProjectLinks({ project }: { project: Project }) {
       href={primaryLink}
       target="_blank"
       rel="noreferrer"
-      className="inline-flex items-center gap-2 rounded-full border border-ink bg-ink px-5 py-2.5 text-sm font-medium text-bg transition-colors hover:border-accent hover:bg-accent"
+      className="btn btn-primary group"
     >
       {t(ui.viewProject, locale)}
       {isExternal ? (
-        <ExternalLinkIcon className="h-4 w-4" />
+        <ExternalLinkIcon className="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
       ) : (
-        <GitHubIcon className="h-4 w-4" />
+        <GitHubIcon className="h-4 w-4 transition-transform duration-200 ease-out group-hover:scale-110" />
       )}
     </a>
   );
@@ -58,14 +58,18 @@ function ProjectCardFace({
   indexLabel?: string;
 }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-[0_18px_50px_-28px_rgb(var(--color-ink)/0.45)]">
-      <div className="relative aspect-[16/10] bg-bg-muted">
+    <div className="group overflow-hidden rounded-card border border-border bg-surface shadow-[0_18px_50px_-28px_rgb(var(--color-ink)/0.45)]">
+      <div className="relative aspect-[16/10] overflow-hidden bg-bg-muted">
         <Image
           src={imageSrc ?? project.image}
           alt={`${project.title} project screenshot`}
           fill
           sizes="(max-width: 1024px) 100vw, 480px"
-          className="object-cover object-top"
+          className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-ink/50 via-ink/10 to-transparent opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100"
+          aria-hidden
         />
         {indexLabel && (
           <span className="absolute left-4 top-4 rounded-full border border-bg/20 bg-ink/55 px-2.5 py-1 font-mono text-[10px] tracking-[0.2em] text-bg backdrop-blur-sm">
@@ -169,7 +173,7 @@ export default function Projects() {
     return (
       <section
         id="projects"
-        className="scroll-mt-24 border-b border-border py-16 sm:py-20 lg:py-24"
+        className="scroll-mt-24 border-b border-border section-y"
         aria-label={t(ui.curatedProjects, locale)}
       >
         <div className="section-container">
@@ -195,7 +199,7 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className="scroll-mt-24 border-b border-border py-16 sm:py-20 lg:py-24"
+      className="scroll-mt-24 border-b border-border section-y"
       aria-label={t(ui.curatedProjects, locale)}
     >
       <div className="section-container">
@@ -377,7 +381,7 @@ export default function Projects() {
                   <span>{t(activeProject.period, locale)}</span>
                 </div>
 
-                <h3 className="mt-4 font-display text-3xl text-ink sm:text-4xl lg:text-5xl">
+                <h3 className="mt-4 font-display text-display-md text-ink">
                   {activeProject.title}
                 </h3>
                 <p className="mt-2 text-base text-ink-muted sm:text-lg">
@@ -391,7 +395,7 @@ export default function Projects() {
                       initial={reduced ? false : { opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.05 + i * 0.03 }}
-                      className="rounded-full border border-border px-3 py-1 font-mono text-xs text-ink-muted"
+                      className="badge"
                     >
                       {tech}
                     </motion.span>
@@ -425,9 +429,9 @@ export default function Projects() {
                       href={repo.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm text-ink-muted transition-colors hover:border-ink hover:text-ink"
+                      className="btn btn-secondary group"
                     >
-                      <GitHubIcon className="h-4 w-4" />
+                      <GitHubIcon className="h-4 w-4 transition-transform duration-200 ease-out group-hover:scale-110" />
                       {t(repo.label, locale)}
                     </a>
                   ))}
@@ -436,9 +440,9 @@ export default function Projects() {
                       href={activeProject.repo}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm text-ink-muted transition-colors hover:border-ink hover:text-ink"
+                      className="btn btn-secondary group"
                     >
-                      <GitHubIcon className="h-4 w-4" />
+                      <GitHubIcon className="h-4 w-4 transition-transform duration-200 ease-out group-hover:scale-110" />
                       {t(ui.code, locale)}
                     </a>
                   )}
@@ -447,9 +451,9 @@ export default function Projects() {
                       href={activeProject.apiLink}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm text-ink-muted transition-colors hover:border-ink hover:text-ink"
+                      className="btn btn-secondary group"
                     >
-                      <ExternalLinkIcon className="h-4 w-4" />
+                      <ExternalLinkIcon className="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                       {t(ui.apiDocs, locale)}
                     </a>
                   )}

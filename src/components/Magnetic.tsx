@@ -19,7 +19,7 @@ export default function Magnetic({
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const springConfig = { stiffness: 250, damping: 15, mass: 0.3 };
+  const springConfig = { stiffness: 240, damping: 22, mass: 0.35 };
   const springX = useSpring(x, springConfig);
   const springY = useSpring(y, springConfig);
 

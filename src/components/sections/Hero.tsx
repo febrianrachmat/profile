@@ -1,21 +1,34 @@
 "use client";
 
+import dynamic from "next/dynamic";
+import { motion, useReducedMotion } from "framer-motion";
 import { profile, ui } from "@/lib/content";
 import { t, useLocale } from "@/lib/i18n";
-import Reveal from "../Reveal";
+import { staggerContainer, staggerItem } from "@/lib/motion";
 import HeroPhoto from "../HeroPhoto";
-import HeroMark3D from "../HeroMark3D";
-import { ExternalLinkIcon } from "../Icons";
+import { ArrowRightIcon, ExternalLinkIcon } from "../Icons";
+
+const HeroScene3D = dynamic(() => import("../HeroScene3D"), {
+  ssr: false,
+});
 
 export default function Hero() {
   const { locale } = useLocale();
+  const reduced = useReducedMotion();
 
   return (
-    <section className="border-b border-border" aria-label="Introduction">
-      <div className="section-container py-16 sm:py-20 lg:py-28">
-        <div className="grid items-center gap-12 lg:grid-cols-[1fr_auto] lg:gap-20">
-          <Reveal>
-            <div className="mb-6 flex flex-wrap items-center gap-3">
+    <section className="relative overflow-hidden border-b border-border" aria-label="Introduction">
+      <div className="section-container section-y">
+        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.15fr)_auto] lg:gap-20">
+          <motion.div
+            initial={reduced ? false : "hidden"}
+            animate="visible"
+            variants={reduced ? undefined : staggerContainer}
+          >
+            <motion.div
+              variants={reduced ? undefined : staggerItem}
+              className="mb-6 flex flex-wrap items-center gap-3"
+            >
               <p className="section-label">{t(ui.profileLabel, locale)}</p>
               {profile.openToWork && (
                 <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 font-mono text-xs text-accent">
@@ -23,50 +36,65 @@ export default function Hero() {
                   {t(ui.openToWork, locale)}
                 </span>
               )}
-            </div>
-            <h1 className="max-w-4xl font-display text-5xl leading-[1.05] text-ink sm:text-6xl lg:text-7xl">
-              {profile.heroHeadline}
-            </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-muted">
-              {t(profile.tagline, locale)}
-            </p>
-            <p className="mt-4 font-mono text-sm text-ink-soft">
-              {t(profile.role, locale)} · {t(profile.location, locale)}
-            </p>
+            </motion.div>
 
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href="#projects"
-                className="inline-flex items-center gap-2 rounded-full border border-ink bg-ink px-5 py-2.5 text-sm font-medium text-bg transition-colors hover:border-accent hover:bg-accent"
-              >
+            <motion.h1
+              variants={reduced ? undefined : staggerItem}
+              className="max-w-4xl font-display text-display text-ink"
+            >
+              {profile.heroHeadline}
+            </motion.h1>
+
+            <motion.p
+              variants={reduced ? undefined : staggerItem}
+              className="mt-6 max-w-xl text-lg leading-relaxed text-ink-muted sm:text-xl"
+            >
+              {t(profile.tagline, locale)}
+            </motion.p>
+
+            <motion.p
+              variants={reduced ? undefined : staggerItem}
+              className="mt-4 font-mono text-sm text-ink-soft"
+            >
+              {t(profile.role, locale)} · {t(profile.location, locale)}
+            </motion.p>
+
+            <motion.div
+              variants={reduced ? undefined : staggerItem}
+              className="mt-8 flex flex-wrap gap-3"
+            >
+              <a href="#projects" className="btn btn-primary group">
                 {t(ui.viewProjects, locale)}
+                <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
               </a>
               {profile.resumeUrl && profile.resumeUrl !== "#" && (
                 <a
                   href={profile.resumeUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm text-ink-muted transition-colors hover:border-ink hover:text-ink"
+                  className="btn btn-secondary group"
                 >
                   {t(ui.downloadResume, locale)}
-                  <ExternalLinkIcon className="h-4 w-4" />
+                  <ExternalLinkIcon className="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </a>
               )}
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm text-ink-muted transition-colors hover:border-ink hover:text-ink"
-              >
+              <a href="#contact" className="btn btn-secondary">
                 {t(ui.contactMe, locale)}
               </a>
-            </div>
-          </Reveal>
+            </motion.div>
+          </motion.div>
 
-          <Reveal delay={0.1} className="justify-self-center lg:justify-self-end">
-            <div className="relative" style={{ perspective: 1200 }}>
-              <HeroMark3D />
+          <motion.div
+            initial={reduced ? false : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            className="justify-self-center lg:justify-self-end"
+          >
+            <div className="relative z-0 isolate" style={{ perspective: 1200 }}>
+              <HeroScene3D />
               <HeroPhoto />
             </div>
-          </Reveal>
+          </motion.div>
         </div>
       </div>
     </section>

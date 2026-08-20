@@ -11,11 +11,19 @@ type SkillMarqueeProps = {
   reverse?: boolean;
   duration?: number;
   className?: string;
+  muted?: boolean;
 };
 
-function SkillPill({ name }: { name: string }) {
+function SkillPill({ name, muted }: { name: string; muted?: boolean }) {
   return (
-    <div className="flex shrink-0 items-center gap-3 rounded-full border border-border bg-surface px-4 py-2.5 shadow-sm">
+    <div
+      className={`group relative flex shrink-0 items-center gap-3 rounded-full border bg-surface px-4 py-2.5 shadow-sm transition-[transform,border-color,opacity] duration-200 ease-out hover:z-10 hover:scale-105 hover:border-accent/40 ${
+        muted
+          ? "border-border/70 opacity-70 hover:opacity-100"
+          : "border-border"
+      }`}
+      title={name}
+    >
       <span className="flex h-7 w-7 items-center justify-center rounded-full bg-bg-muted">
         <img
           src={getSkillIconUrl(name)}
@@ -29,6 +37,9 @@ function SkillPill({ name }: { name: string }) {
       <span className="whitespace-nowrap text-sm font-medium text-ink sm:text-base">
         {name}
       </span>
+      <span className="skill-tooltip" role="tooltip">
+        {name}
+      </span>
     </div>
   );
 }
@@ -38,6 +49,7 @@ export default function SkillMarquee({
   reverse = false,
   duration = 45,
   className = "",
+  muted = false,
 }: SkillMarqueeProps) {
   const track = [...items, ...items];
 
@@ -48,7 +60,11 @@ export default function SkillMarquee({
         style={{ animationDuration: `${duration}s` }}
       >
         {track.map((item, index) => (
-          <SkillPill key={`${item.name}-${index}`} name={item.name} />
+          <SkillPill
+            key={`${item.name}-${index}`}
+            name={item.name}
+            muted={muted}
+          />
         ))}
       </div>
     </div>
