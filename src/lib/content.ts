@@ -287,6 +287,37 @@ export const skillTiers: SkillTier[] = [
 
 export const timeline: TimelineItem[] = [
   {
+    id: "shark",
+    period: { en: "2026", id: "2026" },
+    title: {
+      en: "SHARK — Product Reviews",
+      id: "SHARK — Product Reviews",
+    },
+    organization: {
+      en: "Frontend Lead",
+      id: "Frontend Lead",
+    },
+    description: {
+      en: "Led the frontend for an editorial product-review experience in an Nx monorepo — Next.js UI talking to a real NestJS API for ratings, review lists, and submit flows, not mock data.",
+      id: "Memimpin frontend untuk pengalaman product-review editorial di monorepo Nx — UI Next.js yang terhubung ke API NestJS nyata untuk rating, daftar ulasan, dan alur submit, bukan data mock.",
+    },
+    highlights: [
+      {
+        en: "Directed the product page and reviews UI: typography, rating states, and review list",
+        id: "Mengarahkan UI halaman produk dan ulasan: tipografi, state rating, dan daftar review",
+      },
+      {
+        en: "Wired the frontend to NestJS product and review APIs with loading and empty states",
+        id: "Menghubungkan frontend ke API produk dan review NestJS dengan state loading dan empty",
+      },
+      {
+        en: "Shipped a live Vercel deploy of the Next.js app alongside the shared Prisma/PostgreSQL stack",
+        id: "Merilis deploy live Vercel untuk app Next.js bersama stack Prisma/PostgreSQL bersama",
+      },
+    ],
+    type: "work",
+  },
+  {
     id: "kinova",
     period: { en: "Mar 2026 – Present", id: "Mar 2026 – Sekarang" },
     title: { en: "Kinova — Capstone Project", id: "Kinova — Proyek Capstone" },
@@ -366,6 +397,49 @@ export const timeline: TimelineItem[] = [
 ];
 
 export const projects: Project[] = [
+  {
+    title: "SHARK",
+    subtitle: {
+      en: "Product Reviews — Frontend Lead",
+      id: "Product Reviews — Frontend Lead",
+    },
+    period: { en: "Frontend Lead · 2026", id: "Frontend Lead · 2026" },
+    description: {
+      en: "Editorial product-review experience treated like a magazine spread: honest ratings, readable reviews, and typography with room to breathe. As frontend lead I owned the Next.js UI — product page, review list, and submit flow — talking to a real NestJS API in an Nx monorepo, not mocks.",
+      id: "Pengalaman product-review editorial yang diperlakukan seperti spread majalah: rating yang jujur, ulasan yang bisa dibaca, dan tipografi yang punya napas. Sebagai frontend lead saya bertanggung jawab atas UI Next.js — halaman produk, daftar ulasan, dan alur submit — terhubung ke API NestJS nyata di monorepo Nx, bukan mock.",
+    },
+    keyFeatures: [
+      {
+        en: "Led the frontend: editorial PDP, rating summary, and review list with empty/loading states",
+        id: "Memimpin frontend: PDP editorial, ringkasan rating, dan daftar ulasan dengan state empty/loading",
+      },
+      {
+        en: "Full reviews page with infinite scroll and a form to write a new review",
+        id: "Halaman ulasan penuh dengan infinite scroll dan form untuk menulis ulasan baru",
+      },
+      {
+        en: "Nx monorepo: Next.js frontend, NestJS product/review APIs, Prisma and PostgreSQL",
+        id: "Monorepo Nx: frontend Next.js, API produk/review NestJS, Prisma dan PostgreSQL",
+      },
+    ],
+    tech: [
+      "Next.js",
+      "NestJS",
+      "Prisma",
+      "PostgreSQL",
+      "Nx",
+      "TypeScript",
+    ],
+    category: "frontend",
+    image: "/projects/shark.png",
+    images: [
+      "/projects/shark.png",
+      "/projects/shark-product.png",
+      "/projects/shark-product-reviews.png",
+    ],
+    link: "https://shark-prd-implementation.vercel.app/",
+    repo: "https://github.com/khankhanfauzan/shark-prd-implementation",
+  },
   {
     title: "Set Point",
     subtitle: {
