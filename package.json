@@ -9,7 +9,8 @@
     "lint": "next lint",
     "screenshots": "node scripts/capture-project-screenshots.mjs",
     "screenshots:kinova": "node scripts/capture-kinova-screenshots.mjs",
-    "screenshots:shops": "node scripts/capture-veldt-velmont-screenshots.mjs"
+    "screenshots:shops": "node scripts/capture-veldt-velmont-screenshots.mjs",
+    "screenshots:veldt": "node scripts/capture-veldt-screenshots.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^9.7.0",
