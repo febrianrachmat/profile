@@ -80,7 +80,7 @@ export const profile = {
     en: "Surabaya, Indonesia",
     id: "Surabaya, Indonesia",
   } satisfies LocalizedString,
-  resumeUrl: "/resume.pdf",
+  resumeUrl: "/resume.pdf?v=20261010",
   openToWork: true,
   socials: {
     github: "https://github.com/febrianrachmat",
