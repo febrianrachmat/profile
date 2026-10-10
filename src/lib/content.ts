@@ -398,6 +398,43 @@ export const timeline: TimelineItem[] = [
 
 export const projects: Project[] = [
   {
+    title: "MamaBear",
+    subtitle: {
+      en: "Maternal E-Commerce — Frontend",
+      id: "E-Commerce Ibu & Anak — Frontend",
+    },
+    period: { en: "Frontend · Aug–Oct 2026", id: "Frontend · Agu–Okt 2026" },
+    description: {
+      en: "Storefront for pregnancy, breastfeeding, and postpartum care — nutrition, maternal essentials, and baby supplies. On the RevoU × MamaBear internship I built the AI care chat in Next.js: product cards inside replies, markdown answers with quick replies, WhatsApp handoff, and conversation history, plus cart promo and order-status fixes.",
+      id: "Toko untuk kehamilan, menyusui, dan pemulihan pasca melahirkan — nutrisi, kebutuhan ibu, dan perlengkapan bayi. Di internship RevoU × MamaBear saya membangun chat AI di Next.js: kartu produk di dalam balasan, jawaban markdown dengan quick reply, tombol WhatsApp, dan riwayat percakapan, plus perbaikan promo keranjang dan label status pesanan.",
+    },
+    keyFeatures: [
+      {
+        en: "AI replies render product cards, markdown, and quick-reply chips",
+        id: "Balasan AI menampilkan kartu produk, markdown, dan chip quick reply",
+      },
+      {
+        en: "WhatsApp numbers become clickable handoff buttons, with history from the AI API",
+        id: "Nomor WhatsApp jadi tombol handoff, dengan riwayat dari API AI",
+      },
+      {
+        en: "Cart promo discount, free-shipping progress, and clearer order status labels",
+        id: "Diskon promo keranjang, progres gratis ongkir, dan label status pesanan yang lebih jelas",
+      },
+    ],
+    tech: ["Next.js", "TypeScript", "Tailwind CSS", "Zustand"],
+    category: "frontend",
+    image: "/projects/mamabear.png",
+    images: [
+      "/projects/mamabear.png",
+      "/projects/mamabear-products.png",
+      "/projects/mamabear-product.png",
+      "/projects/mamabear-chat.png",
+    ],
+    link: "https://vi-mamabear-frontend.vercel.app/",
+    repo: "https://github.com/khankhanfauzan/vi-mamabear-frontend",
+  },
+  {
     title: "SHARK",
     subtitle: {
       en: "Product Reviews — Frontend Lead",
