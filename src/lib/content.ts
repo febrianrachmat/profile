@@ -410,6 +410,10 @@ export const projects: Project[] = [
     },
     keyFeatures: [
       {
+        en: "Greeting mascot asks “Butuh bantuan, Mama?” and opens the care chat",
+        id: "Maskot sapaan bertanya “Butuh bantuan, Mama?” lalu membuka chat",
+      },
+      {
         en: "AI replies render product cards, markdown, and quick-reply chips",
         id: "Balasan AI menampilkan kartu produk, markdown, dan chip quick reply",
       },
@@ -424,12 +428,12 @@ export const projects: Project[] = [
     ],
     tech: ["Next.js", "TypeScript", "Tailwind CSS", "Zustand"],
     category: "frontend",
-    image: "/projects/mamabear.png",
+    image: "/projects/mamabear-mascot.png",
     images: [
-      "/projects/mamabear.png",
-      "/projects/mamabear-products.png",
-      "/projects/mamabear-product.png",
-      "/projects/mamabear-chat.png",
+      "/projects/mamabear-mascot.png",
+      "/projects/mamabear-replies.png",
+      "/projects/mamabear-history.png",
+      "/projects/mamabear-cart.png",
     ],
     link: "https://vi-mamabear-frontend.vercel.app/",
     repo: "https://github.com/khankhanfauzan/vi-mamabear-frontend",
