@@ -56,7 +56,7 @@ export type TimelineItem = {
   organization: LocalizedString;
   description: LocalizedString;
   highlights?: LocalizedString[];
-  type: "education" | "work" | "certification";
+  type: "education" | "work" | "internship" | "certification";
 };
 
 export const profile = {
@@ -286,6 +286,37 @@ export const skillTiers: SkillTier[] = [
 ];
 
 export const timeline: TimelineItem[] = [
+  {
+    id: "mamabear",
+    period: { en: "Aug – Oct 2026", id: "Agu – Okt 2026" },
+    title: {
+      en: "MamaBear — Virtual Internship",
+      id: "MamaBear — Virtual Internship",
+    },
+    organization: {
+      en: "RevoU × MamaBear · Frontend",
+      id: "RevoU × MamaBear · Frontend",
+    },
+    description: {
+      en: "Frontend intern on a maternal e-commerce storefront. Built the AI care chat in Next.js — product cards inside replies, markdown answers with quick replies, WhatsApp handoff, and conversation history — and fixed cart promo and order-status flows.",
+      id: "Frontend intern di toko e-commerce ibu dan anak. Membangun chat AI di Next.js — kartu produk di dalam balasan, jawaban markdown dengan quick reply, handoff WhatsApp, dan riwayat percakapan — serta memperbaiki promo keranjang dan label status pesanan.",
+    },
+    highlights: [
+      {
+        en: "Greeting mascot opens an AI care chat with product cards and quick-reply chips",
+        id: "Maskot sapaan membuka chat AI dengan kartu produk dan chip quick reply",
+      },
+      {
+        en: "WhatsApp numbers become handoff buttons, with conversation history from the AI API",
+        id: "Nomor WhatsApp jadi tombol handoff, dengan riwayat percakapan dari API AI",
+      },
+      {
+        en: "Cart promo discount, free-shipping progress, and clearer order status labels",
+        id: "Diskon promo keranjang, progres gratis ongkir, dan label status pesanan yang lebih jelas",
+      },
+    ],
+    type: "internship",
+  },
   {
     id: "shark",
     period: { en: "2026", id: "2026" },

@@ -20,11 +20,13 @@ import {
 const typeLabels = {
   education: { en: "Education", id: "Pendidikan" },
   work: { en: "Project", id: "Proyek" },
+  internship: { en: "Internship", id: "Magang" },
   certification: { en: "Certification", id: "Sertifikasi" },
 } as const;
 
 const typeIcons = {
   work: BriefcaseIcon,
+  internship: BriefcaseIcon,
   education: GraduationIcon,
   certification: CertificateIcon,
 } as const;
