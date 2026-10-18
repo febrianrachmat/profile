@@ -227,6 +227,38 @@ body::after {
   animation-direction: reverse;
 }
 
+@keyframes project-drift {
+  from {
+    transform: scale(1.08) translate3d(2%, 1%, 0);
+  }
+  to {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+.project-frame-drift {
+  animation: project-drift var(--shot-ms, 4.5s) linear both;
+}
+
+@keyframes shot-float {
+  0%,
+  100% {
+    transform: rotate(var(--tilt, -2deg)) translateY(0);
+  }
+  50% {
+    transform: rotate(calc(var(--tilt, -2deg) * -0.6)) translateY(-6px);
+  }
+}
+
+.shot-float {
+  animation: shot-float 3.8s ease-in-out infinite;
+}
+
+.projects-autoplay.is-paused .project-frame-drift,
+.projects-autoplay.is-paused .shot-float {
+  animation-play-state: paused;
+}
+
 .spotlight {
   pointer-events: none;
   position: fixed;
@@ -239,7 +271,9 @@ body::after {
     scroll-behavior: auto;
   }
 
-  .marquee-track {
+  .marquee-track,
+  .project-frame-drift,
+  .shot-float {
     animation: none;
   }
 

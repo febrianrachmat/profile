@@ -119,8 +119,8 @@ export const ui = {
     id: "Screenshot",
   },
   projectStackHint: {
-    en: "Click the front card to cycle — or tap a card behind it.",
-    id: "Klik kartu depan untuk berganti — atau ketuk kartu di belakangnya.",
+    en: "Plays on its own. Hover to pause, or click a card to jump.",
+    id: "Berjalan sendiri. Arahkan kursor untuk jeda, atau klik kartu untuk loncat.",
   },
   nextProject: {
     en: "Next project",

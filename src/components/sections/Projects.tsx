@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FocusEvent,
+  type RefObject,
+} from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
@@ -22,6 +29,86 @@ import {
 } from "../Icons";
 
 type FilterId = "all" | ProjectCategory;
+
+const PROJECT_MS = 14000;
+const SHOT_MS = 4500;
+
+function useShowcaseClock({
+  enabled,
+  paused,
+  projectCount,
+  shotCount,
+  resetKey,
+  onNextProject,
+  onNextShot,
+}: {
+  enabled: boolean;
+  paused: boolean;
+  projectCount: number;
+  shotCount: number;
+  resetKey: number;
+  onNextProject: () => void;
+  onNextShot: () => void;
+}) {
+  const projectBar = useRef<HTMLSpanElement>(null);
+  const shotBar = useRef<HTMLSpanElement>(null);
+  const pausedRef = useRef(paused);
+  const counts = useRef({ projectCount, shotCount });
+  const callbacks = useRef({ onNextProject, onNextShot });
+
+  pausedRef.current = paused;
+  counts.current = { projectCount, shotCount };
+  callbacks.current = { onNextProject, onNextShot };
+
+  useEffect(() => {
+    if (!enabled) return;
+
+    let frame = 0;
+    let last = performance.now();
+    let projectElapsed = 0;
+    let shotElapsed = 0;
+
+    const loop = (now: number) => {
+      const delta = Math.min(64, now - last);
+      last = now;
+
+      if (!pausedRef.current) {
+        if (counts.current.projectCount > 1) {
+          projectElapsed += delta;
+          if (projectElapsed >= PROJECT_MS) {
+            projectElapsed = 0;
+            shotElapsed = 0;
+            callbacks.current.onNextProject();
+          }
+        }
+        if (counts.current.shotCount > 1) {
+          shotElapsed += delta;
+          if (shotElapsed >= SHOT_MS) {
+            shotElapsed = 0;
+            callbacks.current.onNextShot();
+          }
+        }
+      }
+
+      if (projectBar.current) {
+        const scale =
+          counts.current.projectCount > 1 ? projectElapsed / PROJECT_MS : 0;
+        projectBar.current.style.transform = `scaleX(${scale})`;
+      }
+      if (shotBar.current) {
+        const scale = counts.current.shotCount > 1 ? shotElapsed / SHOT_MS : 0;
+        shotBar.current.style.transform = `scaleX(${scale})`;
+      }
+
+      frame = window.requestAnimationFrame(loop);
+    };
+
+    frame = window.requestAnimationFrame(loop);
+    return () => window.cancelAnimationFrame(frame);
+  }, [enabled, resetKey]);
+
+  return { projectBar, shotBar };
+}
 
 function ProjectLinks({ project }: { project: Project }) {
   const { locale } = useLocale();
@@ -54,11 +141,13 @@ function PhotoPrint({
   alt,
   sizes,
   priority = false,
+  drift = false,
 }: {
   src: string;
   alt: string;
   sizes: string;
   priority?: boolean;
+  drift?: boolean;
 }) {
   return (
     <div className="photo-print">
@@ -69,7 +158,10 @@ function PhotoPrint({
           fill
           priority={priority}
           sizes={sizes}
-          className="object-cover object-top transition-transform duration-700 ease-out motion-safe:group-hover:scale-105"
+          className={`object-cover object-top ${
+            drift ? "project-frame-drift" : ""
+          }`}
+          style={drift ? { ["--shot-ms" as string]: `${SHOT_MS}ms` } : undefined}
         />
         <div className="photo-grain" aria-hidden />
         <div className="photo-vignette" aria-hidden />
@@ -83,14 +175,29 @@ function PolaroidGallery({
   activeSrc,
   onSelect,
   projectTitle,
+  shotBar,
 }: {
   images: string[];
   activeSrc: string;
   onSelect: (src: string) => void;
   projectTitle: string;
+  shotBar: RefObject<HTMLSpanElement | null>;
 }) {
   const { locale } = useLocale();
   const reduced = useReducedMotion();
+  const scrollerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    const active = scroller?.querySelector<HTMLElement>("[data-shot-active='true']");
+    if (!scroller || !active) return;
+    const left =
+      active.offsetLeft - scroller.clientWidth / 2 + active.clientWidth / 2;
+    scroller.scrollTo({
+      left,
+      behavior: reduced ? "auto" : "smooth",
+    });
+  }, [activeSrc, reduced]);
 
   return (
     <div className="mt-8">
@@ -98,13 +205,20 @@ function PolaroidGallery({
         <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-ink-soft">
           {t(ui.projectScreenshots, locale)}
         </p>
-        <p className="font-mono text-[10px] tracking-[0.2em] text-ink-soft">
+        <p className="relative font-mono text-[10px] tracking-[0.2em] text-ink-soft">
           {String(images.findIndex((src) => src === activeSrc) + 1).padStart(2, "0")}
           <span className="text-border"> / </span>
           {String(images.length).padStart(2, "0")}
+          <span className="absolute -bottom-1.5 left-0 h-px w-full bg-border" aria-hidden>
+            <span
+              ref={shotBar}
+              className="block h-full w-full origin-left bg-accent"
+              style={{ transform: "scaleX(0)" }}
+            />
+          </span>
         </p>
       </div>
-      <div className="flex items-end gap-3 overflow-x-auto pb-3">
+      <div ref={scrollerRef} className="flex items-end gap-3 overflow-x-auto pb-3">
         {images.map((src, index) => {
           const selected = src === activeSrc;
           const tilt = reduced ? 0 : index % 2 === 0 ? -2.5 : 2.8;
@@ -112,15 +226,19 @@ function PolaroidGallery({
             <button
               key={src}
               type="button"
+              data-shot-active={selected ? "true" : "false"}
               onClick={() => onSelect(src)}
               aria-label={`${projectTitle} screenshot ${index + 1}`}
               aria-pressed={selected}
-              className={`group/polaroid relative h-20 w-[6.75rem] shrink-0 overflow-hidden bg-surface p-1 shadow-[0_12px_28px_-18px_rgb(var(--color-ink)/0.7)] transition-[transform,opacity,box-shadow] duration-200 ease-out sm:h-24 sm:w-32 ${
+              className={`group/polaroid relative h-20 w-[6.75rem] shrink-0 overflow-hidden bg-surface p-1 shadow-[0_12px_28px_-18px_rgb(var(--color-ink)/0.7)] transition-[opacity,box-shadow] duration-200 ease-out sm:h-24 sm:w-32 ${
                 selected
-                  ? "z-10 opacity-100"
+                  ? "shot-float z-10 opacity-100"
                   : "opacity-70 hover:z-10 hover:opacity-100"
               }`}
-              style={{ transform: `rotate(${tilt}deg)` }}
+              style={{
+                ["--tilt" as string]: `${tilt}deg`,
+                transform: selected && !reduced ? undefined : `rotate(${tilt}deg)`,
+              }}
             >
               <span className="relative block h-full w-full overflow-hidden bg-bg-muted">
                 <Image
@@ -146,6 +264,9 @@ export default function Projects() {
   const [filter, setFilter] = useState<FilterId>("all");
   const [activeIndex, setActiveIndex] = useState(0);
   const [previewSrc, setPreviewSrc] = useState<string | null>(null);
+  const [paused, setPaused] = useState(false);
+  const [clockKey, setClockKey] = useState(0);
+  const filterReady = useRef(false);
 
   const filters: { id: FilterId; label: string }[] = [
     { id: "all", label: t(ui.showAll, locale) },
@@ -166,13 +287,67 @@ export default function Projects() {
   useEffect(() => {
     setActiveIndex(0);
     setPreviewSrc(null);
+    if (filterReady.current) setClockKey((key) => key + 1);
+    filterReady.current = true;
   }, [filter]);
 
   const activeProject = filteredProjects[activeIndex] ?? filteredProjects[0];
+  const gallery = activeProject?.images?.length
+    ? activeProject.images
+    : activeProject
+      ? [activeProject.image]
+      : [];
+  const galleryRef = useRef(gallery);
+  const coverRef = useRef(activeProject?.image ?? "");
+  const countRef = useRef(filteredProjects.length);
+  galleryRef.current = gallery;
+  coverRef.current = activeProject?.image ?? "";
+  countRef.current = filteredProjects.length;
+
+  const { projectBar, shotBar } = useShowcaseClock({
+    enabled: !reduced && Boolean(activeProject),
+    paused,
+    projectCount: filteredProjects.length,
+    shotCount: gallery.length,
+    resetKey: clockKey,
+    onNextProject: () => {
+      setActiveIndex((index) => (index + 1) % Math.max(countRef.current, 1));
+      setPreviewSrc(null);
+    },
+    onNextShot: () => {
+      const shots = galleryRef.current;
+      const cover = coverRef.current;
+      if (shots.length < 2) return;
+      setPreviewSrc((current) => {
+        const shown = current ?? cover;
+        const index = Math.max(0, shots.indexOf(shown));
+        const next = shots[(index + 1) % shots.length];
+        return next === cover ? null : next;
+      });
+    },
+  });
 
   useEffect(() => {
     setPreviewSrc(null);
   }, [activeProject?.title]);
+
+  const goTo = (index: number) => {
+    setActiveIndex(index);
+    setPreviewSrc(null);
+    setClockKey((key) => key + 1);
+  };
+
+  const selectShot = (src: string) => {
+    setPreviewSrc(src);
+    setClockKey((key) => key + 1);
+  };
+
+  const pauseDeck = () => setPaused(true);
+  const resumeDeck = (event: FocusEvent<HTMLDivElement>) => {
+    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+      setPaused(false);
+    }
+  };
 
   const titleWords = t(ui.curatedProjects, locale).split(" ");
   const titleLead = titleWords[0] ?? "";
@@ -193,9 +368,6 @@ export default function Projects() {
     );
   }
 
-  const gallery = activeProject.images?.length
-    ? activeProject.images
-    : [activeProject.image];
   const activeImage = previewSrc ?? activeProject.image;
   const hasGallery = gallery.length > 1;
   const nextIndex = (activeIndex + 1) % filteredProjects.length;
@@ -210,11 +382,6 @@ export default function Projects() {
 
   const activeIndexLabel = String(activeIndex + 1).padStart(2, "0");
   const totalLabel = String(filteredProjects.length).padStart(2, "0");
-
-  const goTo = (index: number) => {
-    setActiveIndex(index);
-    setPreviewSrc(null);
-  };
 
   return (
     <section
@@ -275,7 +442,15 @@ export default function Projects() {
           </nav>
         </Reveal>
 
-        <div className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:items-start lg:gap-16 xl:gap-20">
+        <div
+          className={`projects-autoplay mt-14 grid gap-12 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:items-start lg:gap-16 xl:gap-20 ${
+            paused ? "is-paused" : ""
+          }`}
+          onMouseEnter={pauseDeck}
+          onMouseLeave={() => setPaused(false)}
+          onFocusCapture={pauseDeck}
+          onBlurCapture={resumeDeck}
+        >
           <Reveal delay={0.08}>
             <div className="relative">
               {nextProject && (
@@ -301,11 +476,11 @@ export default function Projects() {
                   type="button"
                   onClick={() => goTo(nextIndex)}
                   aria-label={`${t(ui.nextProject, locale)} — ${activeProject.title}`}
-                  className="group w-full text-left"
+                  className="group relative w-full text-left"
                 >
                   <AnimatePresence mode="wait">
                     <motion.div
-                      key={`${activeProject.title}-${activeImage}`}
+                      key={`${activeProject.title}-${activeImage}-${clockKey}`}
                       initial={reduced ? false : { opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={reduced ? undefined : { opacity: 0, y: -12 }}
@@ -316,9 +491,20 @@ export default function Projects() {
                         alt={`${activeProject.title} project screenshot`}
                         sizes="(max-width: 1024px) 100vw, 640px"
                         priority
+                        drift={!reduced}
                       />
                     </motion.div>
                   </AnimatePresence>
+                  <span
+                    className="pointer-events-none absolute inset-x-2 bottom-2 z-20 h-0.5 bg-ink/10 sm:inset-x-2.5 sm:bottom-2.5"
+                    aria-hidden
+                  >
+                    <span
+                      ref={projectBar}
+                      className="block h-full w-full origin-left bg-accent"
+                      style={{ transform: "scaleX(0)" }}
+                    />
+                  </span>
                 </button>
               </Tilt>
 
@@ -356,8 +542,9 @@ export default function Projects() {
                 <PolaroidGallery
                   images={gallery}
                   activeSrc={activeImage}
-                  onSelect={setPreviewSrc}
+                  onSelect={selectShot}
                   projectTitle={activeProject.title}
+                  shotBar={shotBar}
                 />
               )}
             </div>
