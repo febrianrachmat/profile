@@ -4,10 +4,10 @@ export const duration = {
   fast: 0.15,
   base: 0.2,
   slow: 0.25,
-  reveal: 0.55,
+  reveal: 0.7,
 } as const;
 
-export const revealY = 20;
+export const revealY = 28;
 
 export const revealTransition = (delay = 0) => ({
   duration: duration.reveal,

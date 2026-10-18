@@ -19,17 +19,21 @@ export default function Skills() {
     >
       <div className="section-container pt-16 pb-12 sm:pt-20 lg:pt-section">
         <Reveal>
-          <h2 className="section-title">{t(ui.craftTitle, locale)}</h2>
+          <h2 className="font-display text-[clamp(3.1rem,7.5vw,5.75rem)] italic leading-[0.86] tracking-[-0.04em] text-ink">
+            {t(ui.craftTitle, locale)}
+          </h2>
           <p className="mt-6 max-w-3xl text-base leading-relaxed text-ink-muted sm:text-lg">
             {t(craftIntro, locale)}
           </p>
         </Reveal>
       </div>
 
-      <div className="space-y-2 border-y border-border bg-bg-muted/30 py-2">
-        <SkillMarquee items={coreItems} duration={45} />
-        <SkillMarquee items={growingItems} reverse duration={50} muted />
-      </div>
+      <Reveal>
+        <div className="space-y-2 border-y border-border bg-bg-muted/30 py-2">
+          <SkillMarquee items={coreItems} duration={45} />
+          <SkillMarquee items={growingItems} reverse duration={50} muted />
+        </div>
+      </Reveal>
 
       <div className="section-container grid gap-6 py-12 sm:grid-cols-2">
         {skillTiers.map((tier, index) => {

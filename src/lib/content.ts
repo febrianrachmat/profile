@@ -167,6 +167,25 @@ export const ui = {
   aboutLabel: { en: "about", id: "tentang" },
 } as const;
 
+export const aboutShift = {
+  thenPeriod: { en: "2018 — 2023", id: "2018 — 2023" },
+  thenLabel: { en: "Clinic", id: "Klinik" },
+  thenBody: {
+    en: "Physiotherapy at Airlangga. Internships, research, and patients — then a deliberate turn toward software.",
+    id: "Fisioterapi di Airlangga. Magang, penelitian, dan pasien — lalu belokan yang disengaja ke software.",
+  },
+  nowPeriod: { en: "2026", id: "2026" },
+  nowLabel: { en: "Product", id: "Produk" },
+  nowBody: {
+    en: "Interfaces that ship: a physiotherapy booking platform, product reviews, and a maternal storefront.",
+    id: "Antarmuka yang rilis: platform booking fisioterapi, ulasan produk, dan toko ibu dan anak.",
+  },
+  nowImageAlt: {
+    en: "Kinova, a physiotherapy booking platform",
+    id: "Kinova, platform booking fisioterapi",
+  },
+} as const;
+
 export const aboutHeadline: AboutLine[] = [
   {
     text: { en: "A career-changer who", id: "Seorang career-changer yang" },
@@ -319,7 +338,7 @@ export const timeline: TimelineItem[] = [
   },
   {
     id: "shark",
-    period: { en: "2026", id: "2026" },
+    period: { en: "July 2026", id: "Juli 2026" },
     title: {
       en: "SHARK — Product Reviews",
       id: "SHARK — Product Reviews",

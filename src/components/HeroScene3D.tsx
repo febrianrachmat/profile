@@ -58,7 +58,7 @@ function Sculpture({
   );
 }
 
-export default function HeroScene3D() {
+export default function HeroScene3D({ className }: { className?: string }) {
   const reduced = useReducedMotion();
   const { theme } = useTheme();
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -66,8 +66,10 @@ export default function HeroScene3D() {
   const [visible, setVisible] = useState(true);
 
   const accent = theme === "dark" ? "#e87a62" : "#c4523a";
-
   const dpr = useMemo<[number, number]>(() => [1, 1.5], []);
+  const frameClass =
+    className ??
+    "pointer-events-none absolute -inset-16 z-0 sm:-inset-20";
 
   useEffect(() => {
     if (reduced) return;
@@ -94,19 +96,14 @@ export default function HeroScene3D() {
 
   if (reduced) {
     return (
-      <div
-        className="pointer-events-none absolute -inset-10 z-0 rounded-full bg-accent/15 blur-3xl"
-        aria-hidden
-      />
+      <div className={frameClass} aria-hidden>
+        <div className="h-full w-full rounded-full bg-accent/20 blur-3xl" />
+      </div>
     );
   }
 
   return (
-    <div
-      ref={wrapRef}
-      className="pointer-events-none absolute -inset-16 z-0 sm:-inset-20"
-      aria-hidden
-    >
+    <div ref={wrapRef} className={frameClass} aria-hidden>
       <Canvas
         className="h-full w-full"
         frameloop={visible ? "always" : "never"}

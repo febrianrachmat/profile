@@ -656,37 +656,6 @@ export default function Projects() {
                   </div>
                 </motion.div>
               </AnimatePresence>
-
-              <ol className="mt-12 border-t border-border pt-6">
-                {filteredProjects.map((project, index) => {
-                  const selected = index === activeIndex;
-                  return (
-                    <li key={project.title}>
-                      <button
-                        type="button"
-                        onClick={() => goTo(index)}
-                        className={`group flex w-full items-baseline gap-4 py-2.5 text-left transition-colors duration-200 ease-out ${
-                          selected ? "text-ink" : "text-ink-soft hover:text-ink"
-                        }`}
-                      >
-                        <span className="font-mono text-[10px] tracking-[0.2em] text-accent">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <span
-                          className={`font-display text-xl leading-none sm:text-2xl ${
-                            selected ? "italic" : ""
-                          }`}
-                        >
-                          {project.title}
-                        </span>
-                        {selected && (
-                          <span className="ml-auto hidden h-px flex-1 max-w-16 bg-accent sm:block" />
-                        )}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ol>
             </div>
           </Reveal>
         </div>

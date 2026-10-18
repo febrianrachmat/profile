@@ -24,7 +24,6 @@ const config: Config = {
           DEFAULT: "rgb(var(--color-accent) / <alpha-value>)",
           dark: "rgb(var(--color-accent-dark) / <alpha-value>)",
         },
-        marquee: "rgb(var(--color-marquee) / <alpha-value>)",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],

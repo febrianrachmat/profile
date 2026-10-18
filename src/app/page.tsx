@@ -7,7 +7,6 @@ import Experience from "@/components/sections/Experience";
 import Projects from "@/components/sections/Projects";
 import Skills from "@/components/sections/Skills";
 import Contact from "@/components/sections/Contact";
-import Loader from "@/components/Loader";
 import ScrollProgress from "@/components/ScrollProgress";
 import Spotlight from "@/components/Spotlight";
 import { profile, ui } from "@/lib/content";
@@ -18,7 +17,6 @@ export default function Home() {
 
   return (
     <>
-      <Loader />
       <ScrollProgress />
       <Spotlight />
       <a

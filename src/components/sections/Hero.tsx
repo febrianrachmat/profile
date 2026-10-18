@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import { motion, useReducedMotion } from "framer-motion";
 import { profile, ui } from "@/lib/content";
 import { t, useLocale } from "@/lib/i18n";
-import { staggerContainer, staggerItem } from "@/lib/motion";
 import HeroPhoto from "../HeroPhoto";
 import { ArrowRightIcon, ExternalLinkIcon } from "../Icons";
 
@@ -12,22 +11,26 @@ const HeroScene3D = dynamic(() => import("../HeroScene3D"), {
   ssr: false,
 });
 
+const nameEase = [0.16, 1, 0.3, 1] as const;
+
 export default function Hero() {
   const { locale } = useLocale();
   const reduced = useReducedMotion();
+  const [first, last] = profile.heroHeadline.split(" ");
 
   return (
-    <section className="relative overflow-hidden border-b border-border" aria-label="Introduction">
-      <div className="section-container section-y">
-        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.15fr)_auto] lg:gap-20">
-          <motion.div
-            initial={reduced ? false : "hidden"}
-            animate="visible"
-            variants={reduced ? undefined : staggerContainer}
-          >
+    <section
+      className="relative overflow-hidden border-b border-border"
+      aria-label="Introduction"
+    >
+      <div className="section-container pb-16 pt-8 sm:pb-20 sm:pt-10 lg:pb-28 lg:pt-14">
+        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-16">
+          <div>
             <motion.div
-              variants={reduced ? undefined : staggerItem}
-              className="mb-6 flex flex-wrap items-center gap-3"
+              className="mb-8 flex flex-wrap items-center gap-x-4 gap-y-2"
+              initial={reduced ? false : { opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.32, ease: nameEase }}
             >
               <p className="section-label">{t(ui.profileLabel, locale)}</p>
               {profile.openToWork && (
@@ -38,30 +41,52 @@ export default function Hero() {
               )}
             </motion.div>
 
-            <motion.h1
-              variants={reduced ? undefined : staggerItem}
-              className="max-w-4xl font-display text-display text-ink"
-            >
-              {profile.heroHeadline}
-            </motion.h1>
+            <h1 className="font-display text-[clamp(3.15rem,15vw,8.4rem)] leading-[0.8] tracking-[-0.045em] text-ink">
+              {[first, last].filter(Boolean).map((line, index) => (
+                <span
+                  key={line}
+                  className="block overflow-hidden pb-[0.08em] -mb-[0.08em]"
+                >
+                  <motion.span
+                    className={`block ${index === 1 ? "italic text-ink-soft" : ""}`}
+                    initial={reduced ? false : { y: "110%" }}
+                    animate={{ y: "0%" }}
+                    transition={{
+                      duration: 1.15,
+                      delay: 0.05 + index * 0.14,
+                      ease: nameEase,
+                    }}
+                  >
+                    {line}
+                  </motion.span>
+                </span>
+              ))}
+            </h1>
 
             <motion.p
-              variants={reduced ? undefined : staggerItem}
-              className="mt-6 max-w-xl text-lg leading-relaxed text-ink-muted sm:text-xl"
+              className="mt-8 max-w-md text-lg leading-relaxed text-ink-muted sm:text-xl"
+              initial={reduced ? false : { opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.42, ease: nameEase }}
             >
               {t(profile.tagline, locale)}
             </motion.p>
-
             <motion.p
-              variants={reduced ? undefined : staggerItem}
-              className="mt-4 font-mono text-sm text-ink-soft"
+              className="mt-4 font-mono text-xs uppercase tracking-[0.18em] text-ink-soft"
+              initial={reduced ? false : { opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.52, ease: nameEase }}
             >
-              {t(profile.role, locale)} · {t(profile.location, locale)}
+              {t(profile.role, locale)}
+              <span className="text-border"> · </span>
+              {t(profile.location, locale)}
             </motion.p>
 
             <motion.div
-              variants={reduced ? undefined : staggerItem}
               className="mt-8 flex flex-wrap gap-3"
+              initial={reduced ? false : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.62, ease: nameEase }}
             >
               <a href="#projects" className="btn btn-primary group">
                 {t(ui.viewProjects, locale)}
@@ -82,18 +107,17 @@ export default function Hero() {
                 {t(ui.contactMe, locale)}
               </a>
             </motion.div>
-          </motion.div>
+          </div>
 
           <motion.div
-            initial={reduced ? false : { opacity: 0, y: 20 }}
+            className="relative z-0 isolate justify-self-center lg:justify-self-end"
+            style={{ perspective: 1200 }}
+            initial={reduced ? false : { opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
-            className="justify-self-center lg:justify-self-end"
+            transition={{ duration: 0.9, delay: 0.4, ease: nameEase }}
           >
-            <div className="relative z-0 isolate" style={{ perspective: 1200 }}>
-              <HeroScene3D />
-              <HeroPhoto />
-            </div>
+            <HeroScene3D />
+            <HeroPhoto />
           </motion.div>
         </div>
       </div>
