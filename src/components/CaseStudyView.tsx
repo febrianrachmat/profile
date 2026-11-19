@@ -14,6 +14,7 @@ import {
 import { t, useLocale, type LocalizedString } from "@/lib/i18n";
 import { easeOut } from "@/lib/motion";
 import Header from "./Header";
+import ProjectNotice from "./ProjectNotice";
 import Reveal from "./Reveal";
 import ScrollProgress from "./ScrollProgress";
 import {
@@ -150,6 +151,10 @@ export default function CaseStudyView({ slug }: { slug: string }) {
                   </a>
                 )}
               </div>
+
+              {project.notice && (
+                <ProjectNotice notice={project.notice} className="mt-8" />
+              )}
             </Reveal>
 
             <Reveal delay={0.1}>

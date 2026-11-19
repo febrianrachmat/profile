@@ -22,6 +22,8 @@ export type Project = {
   repo?: string;
   repos?: ProjectRepo[];
   apiLink?: string;
+  /** Short status note shown with the project, e.g. hosting that has lapsed */
+  notice?: LocalizedString;
   /** Long-form write-up rendered at /projects/[slug] */
   caseStudy?: CaseStudy;
 };
@@ -198,6 +200,7 @@ export const ui = {
   backHome: { en: "Back to home", id: "Kembali ke beranda" },
   aboutLabel: { en: "about", id: "tentang" },
   caseStudy: { en: "Case study", id: "Studi kasus" },
+  statusNote: { en: "Status", id: "Status" },
   readCaseStudy: { en: "Read case study", id: "Baca studi kasus" },
   backToProjects: { en: "All projects", id: "Semua proyek" },
   liveDemo: { en: "Live demo", id: "Demo live" },
@@ -711,8 +714,8 @@ export const projects: Project[] = [
         id: "Live chat real-time dengan Server-Sent Events (SSE)",
       },
       {
-        en: "End-to-end appointment flow with payment gateway and Google OAuth",
-        id: "Alur appointment end-to-end dengan payment gateway dan Google OAuth",
+        en: "End-to-end appointment flow with simulated payments, built to plug in a real payment gateway, plus Google OAuth",
+        id: "Alur appointment end-to-end dengan pembayaran simulasi yang siap diintegrasikan ke payment gateway sungguhan, plus Google OAuth",
       },
       {
         en: "Role-based access control (JWT) with admin analytics dashboard",
@@ -743,7 +746,10 @@ export const projects: Project[] = [
         url: "https://github.com/Revou-FSSE-Oct25/crack-be-febrianrachmat",
       },
     ],
-    apiLink: "https://crack-be-febrianrachmat-production.up.railway.app/docs",
+    notice: {
+      en: "The backend's Railway hosting has expired, so login, booking, and chat on the live demo are offline. The code, tests, Swagger setup, and docs are intact in the repositories and ready to redeploy.",
+      id: "Hosting backend di Railway sudah expired, sehingga login, booking, dan chat di demo live sedang offline. Kode, test, setup Swagger, dan dokumentasinya tetap utuh di repository dan siap di-deploy ulang.",
+    },
     caseStudy: {
       role: {
         en: "Solo developer: product scope, database design, NestJS API, Next.js frontend, tests, and deployment",
@@ -1001,8 +1007,8 @@ export const projects: Project[] = [
     },
     period: { en: "Backend · 2026", id: "Backend · 2026" },
     description: {
-      en: "Production-ready banking REST API with JWT authentication, user and account management, and transaction APIs (deposit, withdraw, transfer). Built with modular NestJS architecture, Prisma migrations, and Swagger documentation on Railway.",
-      id: "Banking REST API production-ready dengan autentikasi JWT, manajemen user & akun, dan API transaksi (deposit, withdraw, transfer). Dibangun dengan arsitektur modular NestJS, Prisma migrations, dan dokumentasi Swagger di Railway.",
+      en: "Production-ready banking REST API with JWT authentication, user and account management, and transaction APIs (deposit, withdraw, transfer). Built with modular NestJS architecture, Prisma migrations, and Swagger documentation.",
+      id: "Banking REST API production-ready dengan autentikasi JWT, manajemen user & akun, dan API transaksi (deposit, withdraw, transfer). Dibangun dengan arsitektur modular NestJS, Prisma migrations, dan dokumentasi Swagger.",
     },
     keyFeatures: [
       {
@@ -1014,15 +1020,18 @@ export const projects: Project[] = [
         id: "API transaksi: deposit, withdraw, dan transfer antar akun",
       },
       {
-        en: "Modular NestJS architecture with Swagger docs on Railway",
-        id: "Arsitektur modular NestJS dengan dokumentasi Swagger di Railway",
+        en: "Modular NestJS architecture with Swagger API documentation",
+        id: "Arsitektur modular NestJS dengan dokumentasi API Swagger",
       },
     ],
     tech: ["NestJS", "Prisma", "PostgreSQL", "JWT", "Swagger"],
     category: "backend",
     image: "/projects/revobank.png",
     repo: "https://github.com/Revou-FSSE-Oct25/milestone-4-febrianrachmat-1",
-    apiLink: "https://revobank-backend-production.up.railway.app/api",
+    notice: {
+      en: "The Railway hosting for this API has expired, so the live Swagger docs are offline. The code, migrations, and Swagger setup are intact in the repository and ready to redeploy.",
+      id: "Hosting Railway untuk API ini sudah expired, sehingga dokumentasi Swagger live sedang offline. Kode, migrasi, dan setup Swagger tetap utuh di repository dan siap di-deploy ulang.",
+    },
   },
 ];
 

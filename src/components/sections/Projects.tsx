@@ -21,6 +21,7 @@ import {
 } from "@/lib/content";
 import { t, useLocale } from "@/lib/i18n";
 import { easeOut } from "@/lib/motion";
+import ProjectNotice from "../ProjectNotice";
 import Reveal from "../Reveal";
 import Tilt from "../Tilt";
 import {
@@ -619,6 +620,10 @@ export default function Projects() {
                       </ul>
                     )}
 
+                  {activeProject.notice && (
+                    <ProjectNotice notice={activeProject.notice} className="mt-7" />
+                  )}
+
                   <div className="mt-9 flex flex-wrap gap-3">
                     {activeProject.caseStudy && (
                       <Link
@@ -642,7 +647,9 @@ export default function Projects() {
                         {t(repo.label, locale)}
                       </a>
                     ))}
-                    {activeProject.repo && !activeProject.repos?.length && (
+                    {activeProject.repo &&
+                      !activeProject.repos?.length &&
+                      (activeProject.link || activeProject.apiLink) && (
                       <a
                         href={activeProject.repo}
                         target="_blank"

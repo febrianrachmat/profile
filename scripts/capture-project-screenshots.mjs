@@ -35,10 +35,9 @@ const targets = [
     url: "https://e-commerce-eight-vert-tzera30n9h.vercel.app/en",
   },
   { slug: "velmont", url: "https://hotel-green-iota.vercel.app/" },
-  {
-    slug: "revobank",
-    url: "https://revobank-backend-production.up.railway.app/api",
-  },
+  // RevoBank is left out: its Railway hosting expired, so a capture would
+  // save Railway's "Not Found" page. public/projects/revobank.png is drawn
+  // from the API's real routes instead.
 ];
 
 await mkdir(outputDir, { recursive: true });
