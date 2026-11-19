@@ -24,7 +24,7 @@ export default function Header() {
   const onHome = pathname === "/";
   const sectionHref = (id: string) => (onHome ? `#${id}` : `/#${id}`);
   const { scrollY } = useScroll();
-  const [active, setActive] = useState(onHome ? "about" : "projects");
+  const [active, setActive] = useState(onHome ? "" : "projects");
   const [menuOpen, setMenuOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);

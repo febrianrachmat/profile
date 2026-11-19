@@ -36,6 +36,14 @@ export type CaseStudyDecision = {
 };
 
 export type CaseStudy = {
+  /** What the homepage card shows */
+  card: {
+    kicker: LocalizedString;
+    summary: LocalizedString;
+    proof: LocalizedString;
+    /** Card image when it should differ from the project cover */
+    image?: string;
+  };
   role: LocalizedString;
   timeline: LocalizedString;
   stats: { value: string; label: LocalizedString }[];
@@ -88,8 +96,8 @@ export type TimelineItem = {
   period: LocalizedString;
   title: LocalizedString;
   organization: LocalizedString;
-  description: LocalizedString;
-  highlights?: LocalizedString[];
+  /** One line; the matching case study (same id as its slug) holds the detail */
+  summary: LocalizedString;
   type: "education" | "work" | "internship" | "certification";
 };
 
@@ -125,10 +133,10 @@ export const profile = {
 };
 
 export const navItems = [
+  { id: "projects", label: { en: "Projects", id: "Proyek" } },
   { id: "about", label: { en: "About", id: "Tentang" } },
   { id: "experience", label: { en: "Experience", id: "Pengalaman" } },
   { id: "skills", label: { en: "Skills", id: "Keahlian" } },
-  { id: "projects", label: { en: "Projects", id: "Proyek" } },
   { id: "contact", label: { en: "Contact", id: "Kontak" } },
 ] as const;
 
@@ -140,34 +148,9 @@ export const ui = {
   downloadResume: { en: "Download Resume", id: "Unduh CV" },
   contactMe: { en: "Contact Me", id: "Hubungi Saya" },
   curatedProjects: { en: "Curated Projects", id: "Proyek Pilihan" },
-  projectsIntro: {
-    en: "A stacked showcase of shipped work — flip through cards, then dive into screenshots and links.",
-    id: "Showcase bertumpuk dari karya yang sudah live — geser kartu, lalu lihat screenshot dan tautan.",
-  },
-  showAll: { en: "Show All", id: "Semua" },
   viewProject: { en: "View Project", id: "Lihat Proyek" },
   code: { en: "Code", id: "Kode" },
   apiDocs: { en: "API Docs", id: "Dokumentasi API" },
-  projectScreenshots: {
-    en: "Screenshots",
-    id: "Screenshot",
-  },
-  projectStackHint: {
-    en: "Plays on its own. Hover to pause, or click a card to jump.",
-    id: "Berjalan sendiri. Arahkan kursor untuk jeda, atau klik kartu untuk loncat.",
-  },
-  nextProject: {
-    en: "Next project",
-    id: "Proyek berikutnya",
-  },
-  openProjectDetail: {
-    en: "View",
-    id: "Lihat",
-  },
-  noProjectsInCategory: {
-    en: "No projects in this category.",
-    id: "Tidak ada proyek di kategori ini.",
-  },
   craftTitle: { en: "Craft & Technology", id: "Keahlian & Teknologi" },
   experienceTitle: { en: "Experience & Education", id: "Pengalaman & Pendidikan" },
   experienceIntro: {
@@ -200,6 +183,14 @@ export const ui = {
   backHome: { en: "Back to home", id: "Kembali ke beranda" },
   aboutLabel: { en: "about", id: "tentang" },
   caseStudy: { en: "Case study", id: "Studi kasus" },
+  selectedWork: { en: "Selected work", id: "Karya pilihan" },
+  caseStudies: { en: "Case studies", id: "Studi kasus" },
+  caseStudiesIntro: {
+    en: "How each one was built: the problem, the decisions and their trade-offs, and what I'd do next.",
+    id: "Bagaimana masing-masing dibangun: masalahnya, keputusan beserta trade-off-nya, dan langkah berikutnya.",
+  },
+  moreProjects: { en: "More projects", id: "Proyek lainnya" },
+  demo: { en: "Demo", id: "Demo" },
   statusNote: { en: "Status", id: "Status" },
   readCaseStudy: { en: "Read case study", id: "Baca studi kasus" },
   nextCaseStudy: { en: "Next case study", id: "Studi kasus berikutnya" },
@@ -377,24 +368,10 @@ export const timeline: TimelineItem[] = [
       en: "RevoU × MamaBear · Frontend",
       id: "RevoU × MamaBear · Frontend",
     },
-    description: {
-      en: "Frontend intern on a maternal e-commerce storefront. Built the AI care chat in Next.js — product cards inside replies, markdown answers with quick replies, WhatsApp handoff, and conversation history — and fixed cart promo and order-status flows.",
-      id: "Frontend intern di toko e-commerce ibu dan anak. Membangun chat AI di Next.js — kartu produk di dalam balasan, jawaban markdown dengan quick reply, handoff WhatsApp, dan riwayat percakapan — serta memperbaiki promo keranjang dan label status pesanan.",
+    summary: {
+      en: "Built the AI care chat and fixed the cart and order flows.",
+      id: "Membangun chat AI serta memperbaiki alur keranjang dan pesanan.",
     },
-    highlights: [
-      {
-        en: "Greeting mascot opens an AI care chat with product cards and quick-reply chips",
-        id: "Maskot sapaan membuka chat AI dengan kartu produk dan chip quick reply",
-      },
-      {
-        en: "WhatsApp numbers become handoff buttons, with conversation history from the AI API",
-        id: "Nomor WhatsApp jadi tombol handoff, dengan riwayat percakapan dari API AI",
-      },
-      {
-        en: "Cart promo discount, free-shipping progress, and clearer order status labels",
-        id: "Diskon promo keranjang, progres gratis ongkir, dan label status pesanan yang lebih jelas",
-      },
-    ],
     type: "internship",
   },
   {
@@ -408,24 +385,10 @@ export const timeline: TimelineItem[] = [
       en: "Frontend Lead",
       id: "Frontend Lead",
     },
-    description: {
-      en: "Led the frontend for an editorial product-review experience in an Nx monorepo — Next.js UI talking to a real NestJS API for ratings, review lists, and submit flows, not mock data.",
-      id: "Memimpin frontend untuk pengalaman product-review editorial di monorepo Nx — UI Next.js yang terhubung ke API NestJS nyata untuk rating, daftar ulasan, dan alur submit, bukan data mock.",
+    summary: {
+      en: "Led four frontend engineers on a product reviews and rating module.",
+      id: "Memimpin empat frontend engineer di modul ulasan dan rating produk.",
     },
-    highlights: [
-      {
-        en: "Directed the product page and reviews UI: typography, rating states, and review list",
-        id: "Mengarahkan UI halaman produk dan ulasan: tipografi, state rating, dan daftar review",
-      },
-      {
-        en: "Wired the frontend to NestJS product and review APIs with loading and empty states",
-        id: "Menghubungkan frontend ke API produk dan review NestJS dengan state loading dan empty",
-      },
-      {
-        en: "Built an accessible star rating input and an infinite-scroll reviews feed that pauses when the API fails",
-        id: "Membangun input rating bintang yang aksesibel dan feed ulasan infinite scroll yang berhenti saat API gagal",
-      },
-    ],
     type: "work",
   },
   {
@@ -433,24 +396,10 @@ export const timeline: TimelineItem[] = [
     period: { en: "Mar 2026 – Present", id: "Mar 2026 – Sekarang" },
     title: { en: "Kinova — Capstone Project", id: "Kinova — Proyek Capstone" },
     organization: { en: "RevoU · Full Stack", id: "RevoU · Full Stack" },
-    description: {
-      en: "Designed and developed a full-stack physiotherapy booking platform connecting patients with physiotherapists through online consultations, appointment scheduling, and home-visit services.",
-      id: "Merancang dan mengembangkan platform booking fisioterapi full-stack yang menghubungkan pasien dengan fisioterapis melalui konsultasi online, penjadwalan, dan layanan home visit.",
+    summary: {
+      en: "Designed and built a physiotherapy booking platform on my own.",
+      id: "Merancang dan membangun platform booking fisioterapi seorang diri.",
     },
-    highlights: [
-      {
-        en: "Secure JWT auth with role-based access for patients, therapists, and admins",
-        id: "Autentikasi JWT dengan RBAC untuk pasien, terapis, dan admin",
-      },
-      {
-        en: "Real-time live chat via Server-Sent Events (SSE)",
-        id: "Live chat real-time via Server-Sent Events (SSE)",
-      },
-      {
-        en: "Deployed on Vercel (frontend) and Railway (backend)",
-        id: "Deploy di Vercel (frontend) dan Railway (backend)",
-      },
-    ],
     type: "work",
   },
   {
@@ -461,20 +410,10 @@ export const timeline: TimelineItem[] = [
       id: "Full Stack Software Engineering",
     },
     organization: { en: "RevoU", id: "RevoU" },
-    description: {
-      en: "Intensive bootcamp building and deploying full-stack web applications using React, Next.js, NestJS, PostgreSQL, Prisma, Docker, Railway, and Vercel through hands-on industry projects.",
-      id: "Bootcamp intensif membangun dan deploy aplikasi web full-stack menggunakan React, Next.js, NestJS, PostgreSQL, Prisma, Docker, Railway, dan Vercel melalui proyek industri.",
+    summary: {
+      en: "Intensive program where I built VELDT, VELMONT, and the RevoBank API.",
+      id: "Program intensif tempat saya membangun VELDT, VELMONT, dan RevoBank API.",
     },
-    highlights: [
-      {
-        en: "Built VELDT e-commerce, VELMONT hotel booking, and RevoBank API",
-        id: "Membangun e-commerce VELDT, hotel booking VELMONT, dan RevoBank API",
-      },
-      {
-        en: "Agile teamwork, code reviews, and production deployments",
-        id: "Kerja tim agile, code review, dan deployment produksi",
-      },
-    ],
     type: "education",
   },
   {
@@ -485,9 +424,9 @@ export const timeline: TimelineItem[] = [
       id: "Sertifikat Full Stack Software Engineering",
     },
     organization: { en: "Issued by RevoU", id: "Diterbitkan oleh RevoU" },
-    description: {
-      en: "Completed the intensive Full Stack Software Engineering program with deployed capstone and milestone projects.",
-      id: "Menyelesaikan program Full Stack Software Engineering intensif dengan capstone dan milestone project yang di-deploy.",
+    summary: {
+      en: "Completed the program with deployed capstone and milestone projects.",
+      id: "Menyelesaikan program dengan capstone dan milestone project yang di-deploy.",
     },
     type: "certification",
   },
@@ -499,9 +438,9 @@ export const timeline: TimelineItem[] = [
       en: "Airlangga University · GPA 3.45",
       id: "Universitas Airlangga · IPK 3.45",
     },
-    description: {
-      en: "Completed clinical internships and academic research. Thesis on the effect of core exercise on vertical jump in athletes. Developed teamwork, critical thinking, leadership, and patient communication skills.",
-      id: "Menyelesaikan magang klinis dan penelitian akademik. Skripsi tentang efek core exercise terhadap vertical jump atlet. Mengembangkan teamwork, critical thinking, leadership, dan komunikasi pasien.",
+    summary: {
+      en: "Clinical internships and a thesis on core exercise and vertical jump in athletes.",
+      id: "Magang klinis dan skripsi tentang core exercise dan vertical jump pada atlet.",
     },
     type: "education",
   },
@@ -553,6 +492,15 @@ export const projects: Project[] = [
     link: "https://vi-mamabear-frontend.vercel.app/",
     repo: "https://github.com/khankhanfauzan/vi-mamabear-frontend",
     caseStudy: {
+      card: {
+        kicker: { en: "Frontend · Internship", id: "Frontend · Magang" },
+        summary: {
+          en: "An AI care chat for a maternal store: product cards in replies, WhatsApp handoff, and conversation history.",
+          id: "Chat AI untuk toko ibu dan anak: kartu produk di balasan, handoff WhatsApp, dan riwayat percakapan.",
+        },
+        proof: { en: "7 chat tickets · 15 tests · protected docs site", id: "7 tiket chat · 15 test · situs dokumentasi terproteksi" },
+        image: "/projects/mamabear-replies.png",
+      },
       role: {
         en: "Frontend intern on a repo with 7 contributors. I owned the AI chat UI and how replies render, fixed cart and order bugs, and set up the developer docs site. A teammate connected sending to the AI endpoint.",
         id: "Frontend intern di repo dengan 7 kontributor. Saya memegang UI chat AI dan cara balasan dirender, memperbaiki bug keranjang dan pesanan, serta menyiapkan situs dokumentasi developer. Rekan tim menyambungkan pengiriman pesan ke endpoint AI.",
@@ -762,6 +710,14 @@ export const projects: Project[] = [
     link: "https://shark-prd-implementation.vercel.app/",
     repo: "https://github.com/khankhanfauzan/shark-prd-implementation",
     caseStudy: {
+      card: {
+        kicker: { en: "Frontend lead · Team", id: "Frontend lead · Tim" },
+        summary: {
+          en: "A product reviews module on a real NestJS API, with infinite scroll and an accessible star rating input.",
+          id: "Modul ulasan produk di atas API NestJS sungguhan, dengan infinite scroll dan input rating bintang yang aksesibel.",
+        },
+        proof: { en: "Led 4 engineers · 0 components changed on an API switch", id: "Memimpin 4 engineer · 0 komponen berubah saat API berganti" },
+      },
       role: {
         en: "Frontend lead for a team of four frontend engineers, alongside a PM and a backend team. I built most of the Next.js app: the data layer, reviews feed, review form, and star rating components.",
         id: "Frontend lead untuk tim berisi empat frontend engineer, bersama seorang PM dan tim backend. Saya membangun sebagian besar app Next.js: lapisan data, feed ulasan, form ulasan, dan komponen rating bintang.",
@@ -1088,6 +1044,14 @@ export const projects: Project[] = [
       id: "Hosting backend di Railway sudah expired, sehingga login, booking, dan chat di demo live sedang offline. Kode, test, setup Swagger, dan dokumentasinya tetap utuh di repository dan siap di-deploy ulang.",
     },
     caseStudy: {
+      card: {
+        kicker: { en: "Full stack · Solo capstone", id: "Full stack · Capstone solo" },
+        summary: {
+          en: "A physiotherapy booking platform for patients, therapists, and admins, with live chat over SSE.",
+          id: "Platform booking fisioterapi untuk pasien, terapis, dan admin, dengan live chat lewat SSE.",
+        },
+        proof: { en: "3 roles · 15 models · 179 backend tests", id: "3 role · 15 model · 179 test backend" },
+      },
       role: {
         en: "Solo developer: product scope, database design, NestJS API, Next.js frontend, tests, and deployment",
         id: "Solo developer: scope produk, desain database, API NestJS, frontend Next.js, testing, dan deployment",

@@ -28,10 +28,10 @@ export default function Home() {
       <Header />
       <main id="main-content">
         <Hero />
+        <Projects />
         <About />
         <Experience />
         <Skills />
-        <Projects />
         <Contact />
         <footer className="border-t border-border py-8">
           <div className="section-container text-center font-mono text-xs tracking-wider text-ink-soft">
