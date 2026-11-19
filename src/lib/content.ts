@@ -399,7 +399,7 @@ export const timeline: TimelineItem[] = [
   },
   {
     id: "shark",
-    period: { en: "July 2026", id: "Juli 2026" },
+    period: { en: "Jul – Aug 2026", id: "Jul – Agu 2026" },
     title: {
       en: "SHARK — Product Reviews",
       id: "SHARK — Product Reviews",
@@ -422,8 +422,8 @@ export const timeline: TimelineItem[] = [
         id: "Menghubungkan frontend ke API produk dan review NestJS dengan state loading dan empty",
       },
       {
-        en: "Shipped a live Vercel deploy of the Next.js app alongside the shared Prisma/PostgreSQL stack",
-        id: "Merilis deploy live Vercel untuk app Next.js bersama stack Prisma/PostgreSQL bersama",
+        en: "Built an accessible star rating input and an infinite-scroll reviews feed that pauses when the API fails",
+        id: "Membangun input rating bintang yang aksesibel dan feed ulasan infinite scroll yang berhenti saat API gagal",
       },
     ],
     type: "work",
@@ -757,6 +757,172 @@ export const projects: Project[] = [
     ],
     link: "https://shark-prd-implementation.vercel.app/",
     repo: "https://github.com/khankhanfauzan/shark-prd-implementation",
+    caseStudy: {
+      role: {
+        en: "Frontend lead for a team of four frontend engineers, alongside a PM and a backend team. I built most of the Next.js app: the data layer, reviews feed, review form, and star rating components.",
+        id: "Frontend lead untuk tim berisi empat frontend engineer, bersama seorang PM dan tim backend. Saya membangun sebagian besar app Next.js: lapisan data, feed ulasan, form ulasan, dan komponen rating bintang.",
+      },
+      timeline: {
+        en: "Jul – Aug 2026 · team project, Nx monorepo",
+        id: "Jul – Agu 2026 · proyek tim, monorepo Nx",
+      },
+      stats: [
+        { value: "4", label: { en: "frontend engineers on the team I led", id: "frontend engineer di tim yang saya pimpin" } },
+        { value: "15", label: { en: "of the 28 commits to the frontend app", id: "dari 28 commit ke app frontend" } },
+        { value: "2", label: { en: "PRD user stories delivered on a real API", id: "user story PRD selesai di atas API sungguhan" } },
+        { value: "0", label: { en: "components changed when the API moved to cursor pagination", id: "komponen yang berubah saat API pindah ke cursor pagination" } },
+      ],
+      problem: [
+        {
+          en: "SHARK is an e-commerce product page with a reviews and rating module, built from a product requirements document. Two user stories landed on our team: shoppers should see an overall rating at a glance, and they should be able to read every review and add their own.",
+          id: "SHARK adalah halaman produk e-commerce dengan modul ulasan dan rating, dibangun dari dokumen kebutuhan produk (PRD). Dua user story menjadi tanggung jawab tim kami: pembeli bisa melihat rating keseluruhan sekilas, dan bisa membaca semua ulasan serta menambahkan ulasannya sendiri.",
+        },
+        {
+          en: "The bar was explicit: real data from the NestJS backend, not mock data, with loading and empty states, infinite scroll on the full reviews page, and an editorial look that still reads well on a phone. The frontend started as a mockup, so my job was turning it into an app that talks to a real API.",
+          id: "Standarnya tegas: data asli dari backend NestJS, bukan data mock, dengan state loading dan empty, infinite scroll di halaman ulasan lengkap, dan tampilan editorial yang tetap nyaman dibaca di HP. Frontend dimulai sebagai mockup, jadi tugas saya mengubahnya menjadi aplikasi yang bicara dengan API sungguhan.",
+        },
+      ],
+      flow: {
+        title: {
+          en: "A review, from form to rating",
+          id: "Sebuah ulasan, dari form sampai rating",
+        },
+        steps: [
+          {
+            label: { en: "Write", id: "Tulis" },
+            note: { en: "Stars by mouse or keyboard; name and text checked with Zod", id: "Bintang lewat mouse atau keyboard; nama dan teks dicek dengan Zod" },
+          },
+          {
+            label: { en: "Submit", id: "Kirim" },
+            note: { en: "POST to the NestJS API; its validation messages show in the form", id: "POST ke API NestJS; pesan validasinya tampil di form" },
+          },
+          {
+            label: { en: "Refresh", id: "Segarkan" },
+            note: { en: "Reviews, rating summary, and product are invalidated together", id: "Ulasan, ringkasan rating, dan produk di-invalidate bersamaan" },
+          },
+          {
+            label: { en: "Read", id: "Baca" },
+            note: { en: "New average with partial stars; the feed loads 10 at a time", id: "Rata-rata baru dengan bintang parsial; feed memuat 10 per halaman" },
+          },
+        ],
+        footnote: {
+          en: "The product page reuses the reviews already nested in GET /product, so it makes one request fewer than the first version.",
+          id: "Halaman produk memakai ulasan yang sudah ada di dalam GET /product, sehingga butuh satu request lebih sedikit dibanding versi pertama.",
+        },
+      },
+      decisions: [
+        {
+          title: {
+            en: "All server state in TanStack Query, behind one hook file",
+            id: "Semua state server di TanStack Query, di balik satu file hook",
+          },
+          context: {
+            en: "One review touches three views: the feed, the rating summary, and the product page. Syncing them by hand after a submit is where stale numbers come from.",
+            id: "Satu ulasan menyentuh tiga tampilan: feed, ringkasan rating, dan halaman produk. Menyinkronkannya secara manual setelah submit adalah sumber angka yang basi.",
+          },
+          choice: {
+            en: "Every request lives in one hooks file with shared query keys. Submitting a review invalidates reviews, rating summary, and product together, and the cache refetches whatever is on screen.",
+            id: "Setiap request ada di satu file hook dengan query key bersama. Mengirim ulasan meng-invalidate ulasan, ringkasan rating, dan produk sekaligus, lalu cache mengambil ulang apa pun yang sedang tampil.",
+          },
+          tradeoff: {
+            en: "One extra round trip per submit instead of an optimistic update. It paid off later: when the PM moved the API from offset to cursor pagination, the frontend change was a few lines in the hook, API client, and types, with no component touched.",
+            id: "Ada satu round trip tambahan per submit, bukan optimistic update. Hasilnya terbayar belakangan: saat PM memindahkan API dari offset ke cursor pagination, perubahan di frontend hanya beberapa baris di hook, API client, dan types, tanpa menyentuh komponen.",
+          },
+        },
+        {
+          title: {
+            en: "Infinite scroll that stops when the API fails",
+            id: "Infinite scroll yang berhenti saat API gagal",
+          },
+          context: {
+            en: "My first version was a hand-rolled IntersectionObserver. If loading the next page failed while the sentinel was still on screen, the observer was recreated and fired again, so it could keep hitting a failing API.",
+            id: "Versi pertama saya memakai IntersectionObserver buatan sendiri. Jika memuat halaman berikutnya gagal sementara sentinel masih terlihat, observer dibuat ulang dan terpicu lagi, sehingga bisa terus memanggil API yang sedang gagal.",
+          },
+          choice: {
+            en: "I moved to react-infinite-scroll-hook and disabled it while a next-page error is showing, with a spinner while loading and a footer for the error and end states.",
+            id: "Saya beralih ke react-infinite-scroll-hook dan menonaktifkannya selama error halaman berikutnya tampil, dengan spinner saat memuat dan footer untuk state error dan akhir daftar.",
+          },
+          tradeoff: {
+            en: "A small dependency instead of my own observer code. In return, a broken page no longer turns into a retry loop.",
+            id: "Satu dependency kecil sebagai ganti kode observer buatan sendiri. Gantinya, halaman yang gagal tidak lagi berubah menjadi loop retry.",
+          },
+        },
+        {
+          title: {
+            en: "A star rating you can use without a mouse",
+            id: "Rating bintang yang bisa dipakai tanpa mouse",
+          },
+          context: {
+            en: "Rating is the heart of the review form. A row of clickable star icons looks right but is invisible to screen readers and unreachable by keyboard.",
+            id: "Rating adalah inti dari form ulasan. Deretan ikon bintang yang bisa diklik memang terlihat benar, tapi tidak terbaca screen reader dan tidak bisa dijangkau keyboard.",
+          },
+          choice: {
+            en: "The input is a radiogroup with one radio per star. Arrow keys, Home, and End change the value, only the selected star is in the tab order, and hovering previews the choice. The read-only rating fills stars partially, so 4.8 looks like 4.8.",
+            id: "Input-nya berupa radiogroup dengan satu radio per bintang. Tombol panah, Home, dan End mengubah nilai, hanya bintang terpilih yang masuk urutan tab, dan hover menampilkan preview pilihan. Rating read-only mengisi bintang secara parsial, sehingga 4,8 terlihat seperti 4,8.",
+          },
+          tradeoff: {
+            en: "About 150 lines for what could have been five buttons. Worth it for the field every reviewer has to fill in.",
+            id: "Sekitar 150 baris untuk sesuatu yang bisa saja lima tombol. Sepadan untuk field yang wajib diisi setiap pengulas.",
+          },
+        },
+      ],
+      challenges: [
+        {
+          title: {
+            en: "From mockup to real data without a freeze",
+            id: "Dari mockup ke data asli tanpa membekukan pekerjaan",
+          },
+          body: {
+            en: "I first built the product and review UI as a mockup with shadcn/ui, so the screens could take shape before the API was wired. Once the NestJS endpoints were ready, one change replaced every mock with typed API calls, loading skeletons, and error states, and deleted the mock data.",
+            id: "Saya membangun UI produk dan ulasan sebagai mockup dengan shadcn/ui lebih dulu, agar tampilannya terbentuk sebelum API disambungkan. Begitu endpoint NestJS siap, satu perubahan mengganti semua mock dengan panggilan API bertipe, skeleton loading, dan state error, lalu menghapus data mock.",
+          },
+        },
+        {
+          title: {
+            en: "Readable errors from the backend",
+            id: "Error dari backend yang bisa dibaca",
+          },
+          body: {
+            en: "NestJS validation errors arrive as an array of messages. The API client joins them into one sentence, and the form shows it under the submit button, so a rejected review explains itself instead of failing silently.",
+            id: "Error validasi NestJS datang sebagai array pesan. API client menggabungkannya menjadi satu kalimat, dan form menampilkannya di bawah tombol kirim, sehingga ulasan yang ditolak menjelaskan alasannya alih-alih gagal diam-diam.",
+          },
+        },
+        {
+          title: {
+            en: "An editorial look that still reads on a phone",
+            id: "Tampilan editorial yang tetap terbaca di HP",
+          },
+          body: {
+            en: "I redesigned the landing, product, and reviews pages like a magazine spread. Editorial type is easy to get wrong on small screens, so I followed up the same day: the description text and main button got enough contrast to read, and the header buttons became a consistent pair.",
+            id: "Saya mendesain ulang halaman landing, produk, dan ulasan seperti spread majalah. Tipografi editorial mudah meleset di layar kecil, jadi saya menindaklanjutinya di hari yang sama: teks deskripsi dan tombol utama diberi kontras yang cukup untuk dibaca, dan tombol header dibuat serasi.",
+          },
+        },
+      ],
+      outcome: [
+        {
+          en: "Both user stories ship on live data: the rating summary with partial stars, the product page preview, the full reviews feed with infinite scroll, and the review form.",
+          id: "Kedua user story berjalan di atas data live: ringkasan rating dengan bintang parsial, preview di halaman produk, feed ulasan lengkap dengan infinite scroll, dan form ulasan.",
+        },
+        {
+          en: "The data layer absorbed a pagination change from the backend without touching the UI.",
+          id: "Lapisan data menyerap perubahan pagination dari backend tanpa menyentuh UI.",
+        },
+        {
+          en: "The feed, form, and rating components I wrote are still the ones in the repository today.",
+          id: "Komponen feed, form, dan rating yang saya tulis masih menjadi yang dipakai di repository hingga sekarang.",
+        },
+      ],
+      next: [
+        {
+          en: "Add tests for the review form and star input; the reviews module has none yet.",
+          id: "Menambahkan test untuk form ulasan dan input bintang; modul ulasan belum punya test.",
+        },
+        {
+          en: "Show a new review instantly with an optimistic update, then reconcile with the server.",
+          id: "Menampilkan ulasan baru seketika dengan optimistic update, lalu menyelaraskannya dengan server.",
+        },
+      ],
+    },
   },
   {
     title: "Set Point",
