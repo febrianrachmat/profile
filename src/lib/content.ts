@@ -536,6 +536,10 @@ export const projects: Project[] = [
         en: "Cart promo discount, free-shipping progress, and clearer order status labels",
         id: "Diskon promo keranjang, progres gratis ongkir, dan label status pesanan yang lebih jelas",
       },
+      {
+        en: "Fumadocs site with a public user guide and a password-protected developer guide",
+        id: "Situs Fumadocs dengan panduan pengguna publik dan panduan developer yang diproteksi password",
+      },
     ],
     tech: ["Next.js", "TypeScript", "Tailwind CSS", "Zustand"],
     category: "frontend",
