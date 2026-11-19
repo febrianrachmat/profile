@@ -3,8 +3,7 @@
 import {
   createContext,
   useContext,
-  useEffect,
-  useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 
@@ -24,19 +23,26 @@ function applyTheme(theme: Theme) {
   }
 }
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
-  // Default matches the no-flash inline script in the document head.
-  const [theme, setThemeState] = useState<Theme>("dark");
+// The <html data-theme> attribute, set by the no-flash script in the document
+// head, is the single source of truth. React subscribes to it directly.
+function subscribeTheme(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
+  return () => observer.disconnect();
+}
 
-  useEffect(() => {
-    const current = document.documentElement.dataset.theme;
-    if (current === "light" || current === "dark") {
-      setThemeState(current);
-    }
-  }, []);
+function readTheme(): Theme {
+  return document.documentElement.dataset.theme === "light" ? "light" : "dark";
+}
+
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  // The server renders the default; the client reads the real attribute.
+  const theme = useSyncExternalStore<Theme>(subscribeTheme, readTheme, () => "dark");
 
   const setTheme = (t: Theme) => {
-    setThemeState(t);
     applyTheme(t);
     try {
       window.localStorage.setItem("theme", t);

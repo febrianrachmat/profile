@@ -64,6 +64,8 @@ export default function Skills() {
                             : "border-border/70 text-ink-soft opacity-75 hover:opacity-100"
                         }`}
                       >
+                        {/* Tiny remote SVG icons from simpleicons: next/image cannot optimize SVG. */}
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={getSkillIconUrl(item)}
                           alt=""

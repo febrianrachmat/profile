@@ -59,9 +59,13 @@ function useShowcaseClock({
   const counts = useRef({ projectCount, shotCount });
   const callbacks = useRef({ onNextProject, onNextShot });
 
-  pausedRef.current = paused;
-  counts.current = { projectCount, shotCount };
-  callbacks.current = { onNextProject, onNextShot };
+  // Keep the animation loop reading the latest committed values without
+  // restarting it on every render.
+  useEffect(() => {
+    pausedRef.current = paused;
+    counts.current = { projectCount, shotCount };
+    callbacks.current = { onNextProject, onNextShot };
+  });
 
   useEffect(() => {
     if (!enabled) return;
@@ -269,7 +273,6 @@ export default function Projects() {
   const [previewSrc, setPreviewSrc] = useState<string | null>(null);
   const [paused, setPaused] = useState(false);
   const [clockKey, setClockKey] = useState(0);
-  const filterReady = useRef(false);
 
   const filters: { id: FilterId; label: string }[] = [
     { id: "all", label: t(ui.showAll, locale) },
@@ -287,25 +290,12 @@ export default function Projects() {
     [filter],
   );
 
-  useEffect(() => {
-    setActiveIndex(0);
-    setPreviewSrc(null);
-    if (filterReady.current) setClockKey((key) => key + 1);
-    filterReady.current = true;
-  }, [filter]);
-
   const activeProject = filteredProjects[activeIndex] ?? filteredProjects[0];
   const gallery = activeProject?.images?.length
     ? activeProject.images
     : activeProject
       ? [activeProject.image]
       : [];
-  const galleryRef = useRef(gallery);
-  const coverRef = useRef(activeProject?.image ?? "");
-  const countRef = useRef(filteredProjects.length);
-  galleryRef.current = gallery;
-  coverRef.current = activeProject?.image ?? "";
-  countRef.current = filteredProjects.length;
 
   const { projectBar, shotBar } = useShowcaseClock({
     enabled: !reduced && Boolean(activeProject),
@@ -314,12 +304,12 @@ export default function Projects() {
     shotCount: gallery.length,
     resetKey: clockKey,
     onNextProject: () => {
-      setActiveIndex((index) => (index + 1) % Math.max(countRef.current, 1));
+      setActiveIndex((index) => (index + 1) % Math.max(filteredProjects.length, 1));
       setPreviewSrc(null);
     },
     onNextShot: () => {
-      const shots = galleryRef.current;
-      const cover = coverRef.current;
+      const shots = gallery;
+      const cover = activeProject?.image ?? "";
       if (shots.length < 2) return;
       setPreviewSrc((current) => {
         const shown = current ?? cover;
@@ -330,9 +320,13 @@ export default function Projects() {
     },
   });
 
-  useEffect(() => {
+  const selectFilter = (next: FilterId) => {
+    if (next === filter) return;
+    setFilter(next);
+    setActiveIndex(0);
     setPreviewSrc(null);
-  }, [activeProject?.title]);
+    setClockKey((key) => key + 1);
+  };
 
   const goTo = (index: number) => {
     setActiveIndex(index);
@@ -431,7 +425,7 @@ export default function Projects() {
                   )}
                   <button
                     type="button"
-                    onClick={() => setFilter(item.id)}
+                    onClick={() => selectFilter(item.id)}
                     className={`catalog-link ${selected ? "catalog-link-active" : ""}`}
                   >
                     {item.label}

@@ -3,8 +3,7 @@
 import {
   createContext,
   useContext,
-  useEffect,
-  useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 
@@ -24,19 +23,26 @@ type LocaleContextType = {
 
 const LocaleContext = createContext<LocaleContextType | null>(null);
 
-export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
+// The <html lang> attribute, set from storage by the locale script in the
+// document head, is the single source of truth. React subscribes to it directly.
+function subscribeLocale(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["lang"],
+  });
+  return () => observer.disconnect();
+}
 
-  useEffect(() => {
-    const stored = window.localStorage.getItem("locale");
-    if (stored === "en" || stored === "id") {
-      setLocaleState(stored);
-      document.documentElement.lang = stored;
-    }
-  }, []);
+function readLocale(): Locale {
+  return document.documentElement.lang === "id" ? "id" : "en";
+}
+
+export function LocaleProvider({ children }: { children: ReactNode }) {
+  // The server renders English; the client reads the real attribute.
+  const locale = useSyncExternalStore<Locale>(subscribeLocale, readLocale, () => "en");
 
   const setLocale = (next: Locale) => {
-    setLocaleState(next);
     document.documentElement.lang = next;
     try {
       window.localStorage.setItem("locale", next);

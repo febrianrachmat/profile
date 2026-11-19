@@ -25,6 +25,8 @@ function SkillPill({ name, muted }: { name: string; muted?: boolean }) {
       title={name}
     >
       <span className="flex h-7 w-7 items-center justify-center rounded-full bg-bg-muted">
+        {/* Tiny remote SVG icons from simpleicons: next/image cannot optimize SVG. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={getSkillIconUrl(name)}
           alt=""
