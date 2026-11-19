@@ -55,6 +55,14 @@ export default function CaseStudyView({ slug }: { slug: string }) {
   if (!project?.caseStudy) return null;
   const cs = project.caseStudy;
 
+  const withCaseStudies = projects.filter((p) => p.caseStudy);
+  const nextCase =
+    withCaseStudies.length > 1
+      ? withCaseStudies[
+          (withCaseStudies.indexOf(project) + 1) % withCaseStudies.length
+        ]
+      : null;
+
   const categoryLabel =
     projectCategories.find((c) => c.id === project.category)?.label ?? {
       en: project.category,
@@ -394,6 +402,21 @@ export default function CaseStudyView({ slug }: { slug: string }) {
                   {t(ui.backToProjects, locale)}
                 </Link>
               </div>
+              {nextCase && (
+                <Link
+                  href={`/projects/${projectSlug(nextCase)}`}
+                  className="group mx-auto mt-16 block max-w-xl border-t border-border pt-8"
+                >
+                  <span className="section-label">{t(ui.nextCaseStudy, locale)}</span>
+                  <span className="mt-3 flex items-center justify-center gap-3 font-display text-4xl italic text-ink transition-colors duration-200 group-hover:text-accent sm:text-5xl">
+                    {nextCase.title}
+                    <ArrowRightIcon className="h-6 w-6 transition-transform duration-200 ease-out group-hover:translate-x-1" />
+                  </span>
+                  <span className="mt-2 block text-sm text-ink-soft">
+                    {t(nextCase.subtitle, locale)}
+                  </span>
+                </Link>
+              )}
             </Reveal>
           </div>
         </section>

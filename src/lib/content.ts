@@ -202,6 +202,7 @@ export const ui = {
   caseStudy: { en: "Case study", id: "Studi kasus" },
   statusNote: { en: "Status", id: "Status" },
   readCaseStudy: { en: "Read case study", id: "Baca studi kasus" },
+  nextCaseStudy: { en: "Next case study", id: "Studi kasus berikutnya" },
   backToProjects: { en: "All projects", id: "Semua proyek" },
   liveDemo: { en: "Live demo", id: "Demo live" },
   csRole: { en: "My role", id: "Peran saya" },
@@ -547,6 +548,172 @@ export const projects: Project[] = [
     ],
     link: "https://vi-mamabear-frontend.vercel.app/",
     repo: "https://github.com/khankhanfauzan/vi-mamabear-frontend",
+    caseStudy: {
+      role: {
+        en: "Frontend intern on a repo with 7 contributors. I owned the AI chat UI and how replies render, fixed cart and order bugs, and set up the developer docs site. A teammate connected sending to the AI endpoint.",
+        id: "Frontend intern di repo dengan 7 kontributor. Saya memegang UI chat AI dan cara balasan dirender, memperbaiki bug keranjang dan pesanan, serta menyiapkan situs dokumentasi developer. Rekan tim menyambungkan pengiriman pesan ke endpoint AI.",
+      },
+      timeline: {
+        en: "Aug – Oct 2026 · RevoU × MamaBear virtual internship",
+        id: "Agu – Okt 2026 · Virtual internship RevoU × MamaBear",
+      },
+      stats: [
+        { value: "7", label: { en: "chat tickets I shipped, from mock widget to AI assistant", id: "tiket chat yang saya selesaikan, dari widget mock ke asisten AI" } },
+        { value: "6", label: { en: "cart and order bugs I tracked down and fixed", id: "bug keranjang dan pesanan yang saya telusuri dan perbaiki" } },
+        { value: "15", label: { en: "tests I added across chat, cart, and orders", id: "test yang saya tambahkan di chat, keranjang, dan pesanan" } },
+        { value: "8", label: { en: "pages in the docs site I set up", id: "halaman di situs dokumentasi yang saya siapkan" } },
+      ],
+      problem: [
+        {
+          en: "MamaBear sells nutrition and essentials for pregnant and breastfeeding mothers. Customers keep asking the same things: which product helps milk supply, what is on promo this month, where is my order. Getting a human answer means a WhatsApp chat with customer service.",
+          id: "MamaBear menjual nutrisi dan kebutuhan untuk ibu hamil dan menyusui. Pelanggan terus menanyakan hal yang sama: produk mana yang membantu ASI, promo apa bulan ini, di mana pesanan saya. Untuk mendapat jawaban dari manusia, mereka harus chat WhatsApp dengan customer service.",
+        },
+        {
+          en: "The backend exposes an AI chat API. My job was the part customers actually see: an assistant that lives inside the storefront, shows real products instead of just naming them, reads cleanly on a phone, and hands off to a human when it should.",
+          id: "Backend menyediakan API chat AI. Tugas saya adalah bagian yang benar-benar dilihat pelanggan: asisten yang hidup di dalam toko, menampilkan produk sungguhan alih-alih hanya menyebut namanya, nyaman dibaca di HP, dan menyerahkan ke manusia saat perlu.",
+        },
+      ],
+      flow: {
+        title: {
+          en: "From a message to a rendered reply",
+          id: "Dari pesan sampai balasan tampil",
+        },
+        steps: [
+          {
+            label: { en: "Ask", id: "Tanya" },
+            note: { en: "Typed message or quick-reply chip; max 1,000 characters, send locked while waiting", id: "Pesan diketik atau chip quick reply; maks 1.000 karakter, tombol kirim terkunci saat menunggu" },
+          },
+          {
+            label: { en: "Send", id: "Kirim" },
+            note: { en: "POST /ai/chat, wired by a teammate", id: "POST /ai/chat, disambungkan oleh rekan tim" },
+          },
+          {
+            label: { en: "Normalize", id: "Normalisasi" },
+            note: { en: "The reply becomes a typed message: text, role, and products", id: "Balasan menjadi pesan bertipe: teks, role, dan produk" },
+          },
+          {
+            label: { en: "Render", id: "Render" },
+            note: { en: "Markdown, product cards, and a WhatsApp button", id: "Markdown, kartu produk, dan tombol WhatsApp" },
+          },
+        ],
+        footnote: {
+          en: "Reopening a conversation loads GET /ai/history/:id through the same normalizer, so past replies and new ones look identical.",
+          id: "Membuka kembali percakapan memuat GET /ai/history/:id lewat normalizer yang sama, sehingga balasan lama dan baru tampil identik.",
+        },
+      },
+      decisions: [
+        {
+          title: {
+            en: "One normalizer between the AI API and the UI",
+            id: "Satu normalizer di antara API AI dan UI",
+          },
+          context: {
+            en: "AI payloads were not uniform. Text could arrive as content, message, text, or reply; roles as user, human, or customer; prices as numbers or strings.",
+            id: "Payload AI tidak seragam. Teks bisa datang sebagai content, message, text, atau reply; role sebagai user, human, atau customer; harga sebagai angka atau string.",
+          },
+          choice: {
+            en: "Every payload is parsed once, at the service boundary, into typed messages and products. Invalid products are dropped instead of crashing the chat, and components only ever see clean types. Tests pin the parsing rules.",
+            id: "Setiap payload di-parse sekali di batas service menjadi pesan dan produk bertipe. Produk yang tidak valid dibuang alih-alih membuat chat crash, dan komponen hanya menerima tipe yang bersih. Test mengunci aturan parsing-nya.",
+          },
+          tradeoff: {
+            en: "More defensive code than the happy path needs. It paid off when a teammate wired live sending and reused my product normalizer, so live replies and history render the same way.",
+            id: "Kode defensif lebih banyak dari yang dibutuhkan happy path. Hasilnya terbayar saat rekan tim menyambungkan pengiriman live dan memakai ulang normalizer produk saya, sehingga balasan live dan riwayat dirender dengan cara yang sama.",
+          },
+        },
+        {
+          title: {
+            en: "Phone numbers in AI text become a handoff button",
+            id: "Nomor telepon di teks AI menjadi tombol handoff",
+          },
+          context: {
+            en: "When the AI escalates to a human, it writes a WhatsApp number inside the sentence, often wrapped in bold or brackets. On a phone, a raw number is awkward to copy and easy to mistype.",
+            id: "Saat AI mengarahkan ke manusia, ia menulis nomor WhatsApp di dalam kalimat, sering dibungkus bold atau kurung. Di HP, nomor mentah sulit disalin dan mudah salah ketik.",
+          },
+          choice: {
+            en: "One shared pattern detects Indonesian mobile numbers (08, 62, +62), turns them into wa.me links, and renders a WhatsApp button. The number is then stripped from the text so it isn't shown twice.",
+            id: "Satu pola bersama mendeteksi nomor HP Indonesia (08, 62, +62), mengubahnya menjadi link wa.me, dan menampilkan tombol WhatsApp. Nomornya lalu dihapus dari teks agar tidak tampil dua kali.",
+          },
+          tradeoff: {
+            en: "Regex on free text is brittle. The first version left empty brackets and stray asterisks behind. A cleanup pass and nine tests now cover bold, brackets, and the ordinary parentheses that must stay.",
+            id: "Regex pada teks bebas itu rapuh. Versi pertama meninggalkan kurung kosong dan tanda bintang. Kini ada langkah pembersihan dan sembilan test yang mencakup bold, kurung, dan kurung biasa yang harus tetap ada.",
+          },
+        },
+        {
+          title: {
+            en: "Markdown replies without raw HTML",
+            id: "Balasan markdown tanpa HTML mentah",
+          },
+          context: {
+            en: "The AI answers with lists and bold text. Showing the asterisks looks broken, but inserting model output into the page as HTML is a security risk.",
+            id: "AI menjawab dengan daftar dan teks bold. Menampilkan tanda bintang terlihat rusak, tapi menyisipkan output model ke halaman sebagai HTML berisiko secara keamanan.",
+          },
+          choice: {
+            en: "Replies go through react-markdown with GitHub-flavored markdown, which builds React elements and does not render raw HTML. Quick-reply chips cover the common asks: promos, milk-supply products, healthy snacks, and order status.",
+            id: "Balasan diproses react-markdown dengan GitHub-flavored markdown, yang membangun elemen React dan tidak merender HTML mentah. Chip quick reply mencakup pertanyaan umum: promo, produk pelancar ASI, camilan sehat, dan status pesanan.",
+          },
+          tradeoff: {
+            en: "A markdown parser joins the chat bundle. In exchange, replies read like a person wrote them and the model can't inject markup into the store.",
+            id: "Parser markdown ikut masuk bundle chat. Gantinya, balasan terbaca seperti ditulis manusia dan model tidak bisa menyisipkan markup ke toko.",
+          },
+        },
+      ],
+      challenges: [
+        {
+          title: {
+            en: "A cart that removed the wrong item",
+            id: "Keranjang yang menghapus item yang salah",
+          },
+          body: {
+            en: "Removing an item kept only that item, because a filter condition was inverted. The promo took 15% instead of 10%, the free-shipping bar hit 100% at Rp400k while the threshold was Rp500k, two API paths were wrong, and a logged-in user's merged cart never reached the UI. I fixed each one, moved the numbers into named constants, and added store tests.",
+            id: "Menghapus item justru menyisakan item itu saja, karena kondisi filter terbalik. Promo memotong 15% padahal 10%, progress gratis ongkir mencapai 100% di Rp400 ribu padahal batasnya Rp500 ribu, dua path API salah, dan keranjang hasil merge setelah login tidak pernah tampil di UI. Saya memperbaiki semuanya, memindahkan angka ke konstanta bernama, dan menambahkan test store.",
+          },
+        },
+        {
+          title: {
+            en: "Order statuses from three vocabularies",
+            id: "Status pesanan dari tiga kosakata",
+          },
+          body: {
+            en: "Order status strings came from the backend, the payment provider, and legacy data: pending, payment-pending, CANCELED, and more. They are now normalized into one canonical set, so customers always see the right label, such as Menunggu Pembayaran or Dibatalkan.",
+            id: "String status pesanan datang dari backend, payment provider, dan data lama: pending, payment-pending, CANCELED, dan lainnya. Sekarang semuanya dinormalisasi ke satu set baku, sehingga pelanggan selalu melihat label yang benar, seperti Menunggu Pembayaran atau Dibatalkan.",
+          },
+        },
+        {
+          title: {
+            en: "Docs that don't leak through side doors",
+            id: "Dokumentasi yang tidak bocor lewat pintu samping",
+          },
+          body: {
+            en: "I set up a Fumadocs site with a public user guide and a developer guide behind Basic Auth. Locking the pages wasn't enough: search, llms.txt, and preview images could still expose developer content, so they read from a filtered public source. Credentials are compared in constant time, and with no password set, the developer guide stays closed.",
+            id: "Saya menyiapkan situs Fumadocs dengan panduan pengguna publik dan panduan developer di balik Basic Auth. Mengunci halamannya saja tidak cukup: pencarian, llms.txt, dan gambar preview masih bisa membuka isi developer, jadi semuanya membaca dari sumber publik yang sudah difilter. Kredensial dibandingkan secara constant-time, dan tanpa password, panduan developer tetap tertutup.",
+          },
+        },
+      ],
+      outcome: [
+        {
+          en: "The chat grew from a mock widget into the storefront's AI assistant: greeting mascot, product cards, markdown answers, quick replies, WhatsApp handoff, and conversation history.",
+          id: "Chat berkembang dari widget mock menjadi asisten AI toko: maskot sapaan, kartu produk, jawaban markdown, quick reply, handoff WhatsApp, dan riwayat percakapan.",
+        },
+        {
+          en: "Cart totals, the free-shipping bar, and order labels now match what the business actually offers.",
+          id: "Total keranjang, progress gratis ongkir, dan label pesanan kini sesuai dengan yang benar-benar ditawarkan bisnis.",
+        },
+        {
+          en: "The team has one place for documentation, with the developer guide kept private.",
+          id: "Tim punya satu tempat untuk dokumentasi, dengan panduan developer tetap privat.",
+        },
+      ],
+      next: [
+        {
+          en: "Stream AI replies as they are generated instead of waiting for the full answer.",
+          id: "Streaming balasan AI saat sedang dibuat, bukan menunggu jawaban lengkap.",
+        },
+        {
+          en: "Ask the backend for a structured handoff field, so the WhatsApp button no longer depends on regex over free text.",
+          id: "Meminta backend menyediakan field handoff terstruktur, agar tombol WhatsApp tidak lagi bergantung pada regex atas teks bebas.",
+        },
+      ],
+    },
   },
   {
     title: "SHARK",
