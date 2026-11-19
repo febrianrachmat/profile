@@ -22,7 +22,39 @@ export type Project = {
   repo?: string;
   repos?: ProjectRepo[];
   apiLink?: string;
+  /** Long-form write-up rendered at /projects/[slug] */
+  caseStudy?: CaseStudy;
 };
+
+export type CaseStudyDecision = {
+  title: LocalizedString;
+  context: LocalizedString;
+  choice: LocalizedString;
+  tradeoff: LocalizedString;
+};
+
+export type CaseStudy = {
+  role: LocalizedString;
+  timeline: LocalizedString;
+  stats: { value: string; label: LocalizedString }[];
+  problem: LocalizedString[];
+  flow: {
+    title: LocalizedString;
+    steps: { label: LocalizedString; note: LocalizedString }[];
+    footnote?: LocalizedString;
+  };
+  decisions: CaseStudyDecision[];
+  challenges: { title: LocalizedString; body: LocalizedString }[];
+  outcome: LocalizedString[];
+  next: LocalizedString[];
+};
+
+export function projectSlug(project: Pick<Project, "title">): string {
+  return project.title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
 
 export const projectCategories: {
   id: ProjectCategory;
@@ -165,6 +197,31 @@ export const ui = {
   },
   backHome: { en: "Back to home", id: "Kembali ke beranda" },
   aboutLabel: { en: "about", id: "tentang" },
+  caseStudy: { en: "Case study", id: "Studi kasus" },
+  readCaseStudy: { en: "Read case study", id: "Baca studi kasus" },
+  backToProjects: { en: "All projects", id: "Semua proyek" },
+  liveDemo: { en: "Live demo", id: "Demo live" },
+  csRole: { en: "My role", id: "Peran saya" },
+  csTimeline: { en: "Timeline", id: "Durasi" },
+  csStack: { en: "Stack", id: "Stack" },
+  csProblem: { en: "The problem", id: "Masalahnya" },
+  csFlow: { en: "How it flows", id: "Alurnya" },
+  csDecisions: { en: "Key decisions", id: "Keputusan teknis" },
+  csContext: { en: "Context", id: "Konteks" },
+  csChoice: { en: "Decision", id: "Keputusan" },
+  csTradeoff: { en: "Trade-off", id: "Trade-off" },
+  csChallenges: { en: "Hard parts", id: "Bagian tersulit" },
+  csScreens: { en: "Inside the product", id: "Isi produknya" },
+  csOutcome: { en: "Outcome", id: "Hasil" },
+  csNext: { en: "What I'd do next", id: "Yang akan saya lakukan berikutnya" },
+  csCtaTitle: {
+    en: "Want the full story?",
+    id: "Mau cerita lengkapnya?",
+  },
+  csCtaBody: {
+    en: "I'm happy to walk through the code, the schema, or the trade-offs on a call.",
+    id: "Saya senang menjelaskan kode, skema database, atau trade-off-nya lewat call.",
+  },
 } as const;
 
 export const aboutShift = {
@@ -687,6 +744,172 @@ export const projects: Project[] = [
       },
     ],
     apiLink: "https://crack-be-febrianrachmat-production.up.railway.app/docs",
+    caseStudy: {
+      role: {
+        en: "Solo developer: product scope, database design, NestJS API, Next.js frontend, tests, and deployment",
+        id: "Solo developer: scope produk, desain database, API NestJS, frontend Next.js, testing, dan deployment",
+      },
+      timeline: {
+        en: "Mar – Jul 2026 · RevoU capstone",
+        id: "Mar – Jul 2026 · Capstone RevoU",
+      },
+      stats: [
+        { value: "3", label: { en: "roles, each with its own dashboard", id: "role, masing-masing dengan dashboard" } },
+        { value: "15", label: { en: "Prisma models behind the API", id: "model Prisma di balik API" } },
+        { value: "179", label: { en: "backend test cases, incl. real-DB integration", id: "test case backend, termasuk integrasi DB nyata" } },
+        { value: "230+", label: { en: "commits across frontend and backend", id: "commit di frontend dan backend" } },
+      ],
+      problem: [
+        {
+          en: "Small physiotherapy clinics still run on phone calls and chat apps. Patients call to ask who is free, admins juggle schedules by hand, and proof of payment lives in screenshots. During my clinical internships the friction was never the booking itself. It was the handoffs between patient, therapist, and admin.",
+          id: "Klinik fisioterapi kecil masih berjalan lewat telepon dan aplikasi chat. Pasien menelepon untuk tanya siapa yang kosong, admin mengatur jadwal manual, dan bukti bayar tersimpan di screenshot. Selama magang klinis, masalahnya bukan proses booking itu sendiri, melainkan serah-terima antara pasien, terapis, dan admin.",
+        },
+        {
+          en: "Kinova puts all three roles on one platform. Patients consult a verified physiotherapist online, then book a clinic or home visit. Therapists manage their availability. Admins verify therapists, confirm payments, and track the numbers.",
+          id: "Kinova menyatukan ketiga role dalam satu platform. Pasien berkonsultasi online dengan fisioterapis terverifikasi, lalu booking kunjungan klinik atau home visit. Terapis mengatur ketersediaannya. Admin memverifikasi terapis, mengonfirmasi pembayaran, dan memantau angka.",
+        },
+      ],
+      flow: {
+        title: {
+          en: "Consultation lifecycle (pay-first)",
+          id: "Lifecycle konsultasi (bayar dulu)",
+        },
+        steps: [
+          {
+            label: { en: "Requested", id: "Requested" },
+            note: { en: "Patient picks a therapist; the fee is snapshotted", id: "Pasien memilih terapis; tarif di-snapshot" },
+          },
+          {
+            label: { en: "Accepted", id: "Accepted" },
+            note: { en: "Therapist agrees to take the session", id: "Terapis menyetujui sesi" },
+          },
+          {
+            label: { en: "In progress", id: "In progress" },
+            note: { en: "Admin confirms payment and chat unlocks", id: "Admin konfirmasi bayar, chat terbuka" },
+          },
+          {
+            label: { en: "Completed", id: "Completed" },
+            note: { en: "Patient or therapist closes the session", id: "Pasien atau terapis menutup sesi" },
+          },
+        ],
+        footnote: {
+          en: "Cancel or refund is allowed from any non-terminal step and locks the chat again. In progress can only be reached through payment, never set directly.",
+          id: "Cancel atau refund bisa dari langkah mana pun yang belum final dan mengunci chat lagi. Status in progress hanya bisa dicapai lewat pembayaran, tidak bisa di-set langsung.",
+        },
+      },
+      decisions: [
+        {
+          title: {
+            en: "Server-Sent Events instead of WebSockets for chat",
+            id: "Server-Sent Events, bukan WebSocket, untuk chat",
+          },
+          context: {
+            en: "Consultation chat has to feel live, but it is one-to-one, low volume, and the API runs as a single Node service.",
+            id: "Chat konsultasi harus terasa live, tapi sifatnya satu-lawan-satu, volumenya kecil, dan API berjalan sebagai satu service Node.",
+          },
+          choice: {
+            en: "Messages are sent over plain REST and received over an SSE stream. The stream uses the same JWT header, sends a keep-alive ping every 30s, and takes a “since” cursor so a reconnect never duplicates messages.",
+            id: "Pesan dikirim lewat REST biasa dan diterima lewat stream SSE. Stream memakai header JWT yang sama, mengirim ping keep-alive tiap 30 detik, dan menerima cursor “since” agar reconnect tidak menduplikasi pesan.",
+          },
+          tradeoff: {
+            en: "The stream polls the database every ~2.5s instead of pushing on write. No Redis or socket gateway to run, but delivery is near-real-time rather than instant, and it would need pub/sub to scale to many rooms.",
+            id: "Stream melakukan polling ke database tiap ~2,5 detik, bukan push saat pesan ditulis. Tidak perlu menjalankan Redis atau socket gateway, tapi pengiriman near-real-time, bukan instan, dan butuh pub/sub untuk skala banyak room.",
+          },
+        },
+        {
+          title: {
+            en: "Status changes as a server-side state machine",
+            id: "Perubahan status sebagai state machine di server",
+          },
+          context: {
+            en: "Three roles touch the same consultation and booking. Checks that live only in the UI would let a crafted request skip payment.",
+            id: "Tiga role menyentuh konsultasi dan booking yang sama. Validasi yang hanya ada di UI memungkinkan request buatan melewati pembayaran.",
+          },
+          choice: {
+            en: "Each role gets an explicit transition matrix in the service layer. In progress is set only by payment confirmation, and chat endpoints refuse to send until the consultation is paid.",
+            id: "Setiap role punya matriks transisi eksplisit di service layer. Status in progress hanya di-set oleh konfirmasi pembayaran, dan endpoint chat menolak kirim pesan sebelum konsultasi dibayar.",
+          },
+          tradeoff: {
+            en: "More service code and a test per transition. In return, every illegal jump returns a 400 with a business error code instead of corrupting data.",
+            id: "Kode service lebih banyak dan perlu test per transisi. Gantinya, setiap lompatan ilegal mengembalikan 400 dengan kode error bisnis, bukan merusak data.",
+          },
+        },
+        {
+          title: {
+            en: "Payment modeled as a lifecycle, not a gateway",
+            id: "Pembayaran dimodelkan sebagai lifecycle, bukan gateway",
+          },
+          context: {
+            en: "A real payment provider was out of scope for the capstone, but the product still had to behave like money was moving.",
+            id: "Integrasi payment provider sungguhan di luar scope capstone, tapi produknya tetap harus berperilaku seolah ada uang yang bergerak.",
+          },
+          choice: {
+            en: "A simulated transaction goes Pending → Paid → Refunded and is confirmed by an admin. It belongs to exactly one consultation or booking, and the therapist's fee is copied into the request so later price changes never apply retroactively.",
+            id: "Transaksi simulasi berjalan Pending → Paid → Refunded dan dikonfirmasi admin. Transaksi terhubung ke tepat satu konsultasi atau booking, dan tarif terapis disalin ke request agar perubahan harga tidak berlaku mundur.",
+          },
+          tradeoff: {
+            en: "No real money moves. But the states, refunds, and side effects have the same shape a gateway webhook would drive, so swapping one in only touches the confirm step.",
+            id: "Tidak ada uang sungguhan. Tapi status, refund, dan efek sampingnya punya bentuk yang sama dengan yang digerakkan webhook gateway, jadi menggantinya hanya menyentuh langkah konfirmasi.",
+          },
+        },
+      ],
+      challenges: [
+        {
+          title: {
+            en: "Patients who pay shouldn't wait forever",
+            id: "Pasien yang sudah bayar tidak boleh menunggu selamanya",
+          },
+          body: {
+            en: "Every consultation has an SLA tier: 24 hours by default, or 10 minutes for a fast session, which is only offered while the therapist is online. A scheduled job looks for paid sessions with no therapist reply past the deadline, refunds them, cancels the consultation, and notifies both sides.",
+            id: "Setiap konsultasi punya tier SLA: 24 jam secara default, atau 10 menit untuk sesi cepat, yang hanya ditawarkan saat terapis online. Scheduled job mencari sesi berbayar yang belum dibalas terapis melewati batas waktu, me-refund, membatalkan konsultasi, dan memberi notifikasi ke kedua pihak.",
+          },
+        },
+        {
+          title: {
+            en: "Two patients, one slot",
+            id: "Dua pasien, satu slot",
+          },
+          body: {
+            en: "Booking a slot marks it unavailable and cancelling releases it. Rescheduling claims the new slot before releasing the old one, so a failure halfway never leaves a patient with no slot or two patients with the same one.",
+            id: "Booking slot menandainya tidak tersedia dan cancel melepasnya kembali. Reschedule mengklaim slot baru sebelum melepas slot lama, sehingga kegagalan di tengah jalan tidak membuat pasien kehilangan slot atau dua pasien mendapat slot yang sama.",
+          },
+        },
+        {
+          title: {
+            en: "Testing against a real database",
+            id: "Testing dengan database sungguhan",
+          },
+          body: {
+            en: "Mocked unit tests can't catch a broken Prisma query or a wrong write order. I added an integration suite that runs the full journey (slot, consultation, booking, chat, payment, notifications) plus role and ownership negative paths against a dedicated Postgres in CI, run serially to avoid deadlocks during table resets.",
+            id: "Unit test dengan mock tidak bisa menangkap query Prisma yang rusak atau urutan write yang salah. Saya menambahkan integration suite yang menjalankan alur lengkap (slot, konsultasi, booking, chat, pembayaran, notifikasi) plus negative path role dan ownership terhadap Postgres khusus di CI, dijalankan serial untuk menghindari deadlock saat reset tabel.",
+          },
+        },
+      ],
+      outcome: [
+        {
+          en: "The full patient journey works end to end: consult, pay, chat, book a visit, and leave a review.",
+          id: "Alur pasien lengkap berjalan end-to-end: konsultasi, bayar, chat, booking kunjungan, dan memberi ulasan.",
+        },
+        {
+          en: "Every endpoint is documented in Swagger, with an ERD and 20+ technical docs in the repo.",
+          id: "Semua endpoint terdokumentasi di Swagger, dengan ERD dan 20+ dokumen teknis di repo.",
+        },
+        {
+          en: "CI runs unit coverage, integration tests against Postgres, and a production build on every push to main.",
+          id: "CI menjalankan coverage unit test, integration test terhadap Postgres, dan build produksi di setiap push ke main.",
+        },
+      ],
+      next: [
+        {
+          en: "Replace the polling SSE loop with Postgres LISTEN/NOTIFY or Redis pub/sub for instant delivery.",
+          id: "Mengganti loop polling SSE dengan Postgres LISTEN/NOTIFY atau Redis pub/sub agar pengiriman instan.",
+        },
+        {
+          en: "Plug a real payment gateway webhook into the existing transaction lifecycle.",
+          id: "Menyambungkan webhook payment gateway sungguhan ke lifecycle transaksi yang sudah ada.",
+        },
+      ],
+    },
   },
   {
     title: "VELDT",

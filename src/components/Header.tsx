@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import {
   AnimatePresence,
@@ -19,8 +20,11 @@ export default function Header() {
   const { theme, toggle: toggleTheme } = useTheme();
   const { locale, toggleLocale } = useLocale();
   const reduced = useReducedMotion();
+  const pathname = usePathname();
+  const onHome = pathname === "/";
+  const sectionHref = (id: string) => (onHome ? `#${id}` : `/#${id}`);
   const { scrollY } = useScroll();
-  const [active, setActive] = useState("about");
+  const [active, setActive] = useState(onHome ? "about" : "projects");
   const [menuOpen, setMenuOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -65,7 +69,7 @@ export default function Header() {
     >
       <div className="section-container flex items-center justify-between py-4">
         <Link
-          href="#"
+          href={onHome ? "#" : "/"}
           className="inline-flex items-center transition-opacity duration-200 hover:opacity-80"
           aria-label={`${profile.name} home`}
         >
@@ -85,7 +89,7 @@ export default function Header() {
             return (
               <a
                 key={item.id}
-                href={`#${item.id}`}
+                href={sectionHref(item.id)}
                 className={`nav-link ${isActive ? "nav-link-active" : ""}`}
               >
                 {t(item.label, locale)}
@@ -174,7 +178,7 @@ export default function Header() {
             {navItems.map((item) => (
               <li key={item.id}>
                 <a
-                  href={`#${item.id}`}
+                  href={sectionHref(item.id)}
                   onClick={() => setMenuOpen(false)}
                   className={`block py-1 text-sm transition-colors duration-200 ${
                     active === item.id ? "text-accent" : "text-ink-soft hover:text-ink"

@@ -9,10 +9,12 @@ import {
   type RefObject,
 } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   projectCategories,
   projects,
+  projectSlug,
   ui,
   type Project,
   type ProjectCategory,
@@ -124,7 +126,7 @@ function ProjectLinks({ project }: { project: Project }) {
       href={primaryLink}
       target="_blank"
       rel="noreferrer"
-      className="btn btn-primary group"
+      className={`btn group ${project.caseStudy ? "btn-secondary" : "btn-primary"}`}
     >
       {t(ui.viewProject, locale)}
       {isExternal ? (
@@ -618,6 +620,15 @@ export default function Projects() {
                     )}
 
                   <div className="mt-9 flex flex-wrap gap-3">
+                    {activeProject.caseStudy && (
+                      <Link
+                        href={`/projects/${projectSlug(activeProject)}`}
+                        className="btn btn-primary group"
+                      >
+                        {t(ui.readCaseStudy, locale)}
+                        <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
+                      </Link>
+                    )}
                     <ProjectLinks project={activeProject} />
                     {activeProject.repos?.map((repo) => (
                       <a
